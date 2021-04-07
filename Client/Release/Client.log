@@ -1,0 +1,9 @@
+﻿  client.cpp
+E:\DUT\Sem 2\RESEAUX\TP\TP SOCKET EX\Client\client.cpp(12,1): warning C4326: le type de retour de 'main' doit être 'int' au lieu de 'void'
+E:\DUT\Sem 2\RESEAUX\TP\TP SOCKET EX\Client\client.cpp(75,15): warning C4566: le caractère représenté par le nom de caractère universel '\uFFFD' ne peut pas être représenté dans la page de codes actuelle (1252)
+  Génération de code en cours
+  105 of 116 functions (90.5%) were compiled, the rest were copied from previous compilation.
+    76 functions were new in current compilation
+    4 functions had inline decision re-evaluated but remain unchanged
+  Fin de la génération du code
+  Client.vcxproj -> E:\DUT\Sem 2\RESEAUX\TP\TP SOCKET EX\Client\Release\Client.exe

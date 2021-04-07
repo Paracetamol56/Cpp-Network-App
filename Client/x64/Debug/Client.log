@@ -1,0 +1,4 @@
+﻿  client.cpp
+E:\DUT\Sem 2\RESEAUX\TP\TP SOCKET EX\Client\client.cpp(10,1): warning C4326: le type de retour de 'main' doit être 'int' au lieu de 'void'
+E:\DUT\Sem 2\RESEAUX\TP\TP SOCKET EX\Client\client.cpp(77,15): warning C4566: le caractère représenté par le nom de caractère universel '\uFFFD' ne peut pas être représenté dans la page de codes actuelle (1252)
+  Client.vcxproj -> E:\DUT\Sem 2\RESEAUX\TP\TP SOCKET EX\Client\x64\Debug\Client.exe
