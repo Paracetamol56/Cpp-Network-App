@@ -8,6 +8,9 @@
 
 #include "wx/wx.h"
 #include "wx/menu.h"
+#include "wx/utils.h"
+
+wxDEFINE_EVENT(myID_SETTINGS, wxCommandEvent);
 
 /// <summary>
 /// Main frame class
@@ -19,9 +22,16 @@ public:
 	CMain();
 	~CMain();
 
-private:
+protected:
+	// Menus
 	wxMenuBar* m_mainMenuBar;
 	wxMenu* m_fileMenu;
 	wxMenu* m_helpMenu;
-};
 
+private:
+	void OnQuit(wxCommandEvent& event);
+	void OnSettings(wxCommandEvent& event);
+	void OnAbout(wxCommandEvent& event);
+
+	wxDECLARE_EVENT_TABLE();
+};
