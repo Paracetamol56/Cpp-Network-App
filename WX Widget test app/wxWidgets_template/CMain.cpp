@@ -17,6 +17,8 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	m_fileMenu = new wxMenu();
 	m_helpMenu = new wxMenu();
 
+	SetMenuBar(m_mainMenuBar);
+
 	m_mainMenuBar->Append(m_fileMenu, _T("&File"));
 	m_mainMenuBar->Append(m_helpMenu, _T("&Help"));
 	// File menu
