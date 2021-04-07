@@ -8,11 +8,11 @@
 
 // Event table
 wxBEGIN_EVENT_TABLE(CMain, wxFrame)
-	EVT_MENU(wxID_EXIT, CMain::OnQuit)
-	EVT_MENU(myID_SETTINGS, CMain::OnSettings)
-	EVT_MENU(wxID_ABOUT, CMain::OnAbout)
-	EVT_BUTTON(myID_SENDBUTTON, CMain::OnAbout)
-	EVT_BUTTON(myID_FILEBUTTON, CMain::OnAbout)
+EVT_MENU(wxID_EXIT, CMain::OnQuit)
+EVT_MENU(myID_SETTINGS, CMain::OnSettings)
+EVT_MENU(wxID_ABOUT, CMain::OnAbout)
+EVT_BUTTON(myID_SENDBUTTON, CMain::OnAbout)
+EVT_BUTTON(myID_FILEBUTTON, CMain::OnAbout)
 wxEND_EVENT_TABLE()
 
 /// <summary>
@@ -20,18 +20,13 @@ wxEND_EVENT_TABLE()
 /// </summary>
 CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30), wxSize(615, 865))
 {
-	// Menu bar creation
+	// ======== MENU BAR CREATION ========//
+	// Main menu bar
 	m_mainMenuBar = new wxMenuBar();
 	// Menus creation
 	m_fileMenu = new wxMenu();
 	m_helpMenu = new wxMenu();
-	// UIs creation
-	m_panelOutput = new wxPanel(this, wxID_ANY, wxPoint(5, 5), wxSize(590, 715));
-	m_panelInput = new wxPanel(this, wxID_ANY, wxPoint(5, 725), wxSize(590, 75));
-	m_buttonSend = new wxButton(m_panelInput, wxID_ANY, "Envoyer", wxPoint(475, 5), wxSize(110, 30));
-	m_buttonAddfile = new wxButton(m_panelInput, wxID_ANY, "Ajouter un fichier", wxPoint(475, 40), wxSize(110, 30));
-	m_textBox = new wxTextCtrl();
-
+	
 	SetMenuBar(m_mainMenuBar);
 
 	m_mainMenuBar->Append(m_fileMenu, _T("&File"));
@@ -42,6 +37,31 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	m_fileMenu->Append(wxID_EXIT, _T("&Quit"));
 	// Help menu
 	m_helpMenu->Append(wxID_ABOUT, _T("&About\tF1"));
+
+	// ========== GUI CREATION ========== //
+	// Sizers
+	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer* secondaryInputSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer* secondaryInputButtonSizer = new wxBoxSizer(wxVERTICAL);
+	// Panels
+	wxPanel* panelOutput = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
+	wxPanel* panelInput = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
+	mainSizer->Add(panelOutput, 1, wxEXPAND | wxALL, 5);
+	mainSizer->Add(panelInput, 0,wxEXPAND | wxRIGHT | wxBOTTOM | wxLEFT, 5);
+	// Text input
+	wxTextCtrl* textCtrlBox = new wxTextCtrl(panelInput, wxID_ANY, m_inputText, wxDefaultPosition, wxSize(110, 100), wxTE_MULTILINE);
+	secondaryInputSizer->Add(textCtrlBox, 1, wxEXPAND | wxTOP | wxBOTTOM | wxLEFT, 5);
+	// Buttons
+	wxButton* buttonSend = new wxButton(panelInput, wxID_ANY, "Send", wxDefaultPosition, wxSize(110, 30), wxTE_MULTILINE);
+	wxButton* buttonAddfile = new wxButton(panelInput, wxID_ANY, "Add a file", wxDefaultPosition, wxSize(110, 30), wxTE_MULTILINE);
+	secondaryInputButtonSizer->Add(buttonSend, 0, wxEXPAND | wxALL, 5);
+	secondaryInputButtonSizer->Add(buttonAddfile, 0, wxEXPAND | wxRIGHT | wxBOTTOM | wxLEFT, 5);
+	secondaryInputSizer->Add(secondaryInputButtonSizer);
+
+	// Sizer structuration
+	this->SetSizer(mainSizer);
+	panelInput->SetSizer(secondaryInputSizer);
+	mainSizer->Layout();
 }
 
 /// <summary>
@@ -51,6 +71,20 @@ CMain::~CMain()
 {
 }
 
+
+wxString CMain::getInputData()
+{
+	if (m_inputText.IsEmpty() == false)
+	{
+		if (m_inputFilePath.IsEmpty() == false)
+		{
+			// The '\f' is use specify that a file path is following
+			m_inputText = m_inputText + '\f' + m_inputFilePath;
+		}
+		return(m_inputText);
+	}
+	return("");
+}
 
 void CMain::OnQuit(wxCommandEvent& WXUNUSED(event))
 {

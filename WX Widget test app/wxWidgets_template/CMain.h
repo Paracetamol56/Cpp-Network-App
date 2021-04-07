@@ -30,17 +30,14 @@ protected:
 	wxMenu* m_fileMenu;
 	wxMenu* m_helpMenu;
 
-	// UIs
-	wxPanel* m_panelOutput = nullptr;
-	wxPanel* m_panelInput = nullptr;
-	wxButton* m_buttonSend = nullptr;
-	wxButton* m_buttonAddfile = nullptr;
-	wxTextCtrl* m_textBox = nullptr;
-
 private:
 	// Data from input
 	wxString m_inputText = "";
-	wxString m_filePath = "";
+	wxString m_inputFilePath = "";
+
+public:
+	// Getter for inputs data
+	wxString getInputData();
 
 private:
 	// Menu events
