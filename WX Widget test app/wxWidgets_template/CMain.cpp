@@ -47,7 +47,7 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	wxPanel* panelOutput = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
 	wxPanel* panelInput = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
 	mainSizer->Add(panelOutput, 1, wxEXPAND | wxALL, 5);
-	mainSizer->Add(panelInput, 0,wxEXPAND | wxRIGHT | wxBOTTOM | wxLEFT, 5);
+	mainSizer->Add(panelInput, 0, wxEXPAND | wxRIGHT | wxBOTTOM | wxLEFT, 5);
 	// Text input
 	wxTextCtrl* textCtrlBox = new wxTextCtrl(panelInput, wxID_ANY, m_inputText, wxDefaultPosition, wxSize(110, 100), wxTE_MULTILINE);
 	secondaryInputSizer->Add(textCtrlBox, 1, wxEXPAND | wxTOP | wxBOTTOM | wxLEFT, 5);
