@@ -1,13 +1,26 @@
+/*
+ * Created on Tue Apr 07 2021
+ *
+ * Copyright (c) 2021 - Mathéo Galuba
+ */
+
 #include "CSettings.h"
 
-CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1), wxSize(290, 140), wxDEFAULT_FRAME_STYLE &~(wxRESIZE_BORDER))
+// Event table
+wxBEGIN_EVENT_TABLE(CSettings, wxFrame)
+EVT_BUTTON(myID_OKBUTTON, CSettings::onButtonOk)
+EVT_BUTTON(myID_CANCELBUTTON, CSettings::onButtonCancel)
+wxEND_EVENT_TABLE()
+
+CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1), wxSize(290, 170), wxDEFAULT_FRAME_STYLE &~(wxRESIZE_BORDER))
 {
 	// Panel
 	wxPanel* panelGlobal = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(500, 500), wxTE_MULTILINE);
 	// Sizer
-	wxBoxSizer* mainBox = new wxBoxSizer(wxVERTICAL);
-	wxFlexGridSizer* mainSizer = new wxFlexGridSizer(3, 2, 5, 30);
+	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+	wxFlexGridSizer* flexSizer = new wxFlexGridSizer(3, 2, 5, 30);
 	wxBoxSizer* ipSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 	// Static text labels
 	wxStaticText* ipLabel = new wxStaticText(panelGlobal, -1, wxT("Destination IP"));
 	wxStaticText* portLabel = new wxStaticText(panelGlobal, -1, wxT("Port"));
@@ -31,21 +44,37 @@ CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1),
 	wxTextCtrl* portTextBox = new wxTextCtrl(panelGlobal, -1);
 	// Username input
 	wxTextCtrl* usernameTextBox = new wxTextCtrl(panelGlobal, -1, wxT(""), wxPoint(-1, -1), wxSize(-1, -1));
+	// Buttons
+	wxButton* buttonOk = new wxButton(panelGlobal, myID_OKBUTTON, "OK", wxDefaultPosition, wxSize(110, 30));
+	wxButton* buttonCancel = new wxButton(panelGlobal, myID_CANCELBUTTON, "Cancel", wxDefaultPosition, wxSize(110, 30));
+	buttonSizer->Add(buttonCancel, 1, wxALL, 5);
+	buttonSizer->Add(buttonOk, 1, wxALL, 5);
 
 	// Add everything to the sizer
-	mainSizer->Add(ipLabel);
-	mainSizer->Add(ipSizer, 1, wxEXPAND);
-	mainSizer->Add(portLabel);
-	mainSizer->Add(portTextBox, 1, wxEXPAND);
-	mainSizer->Add(usernameLable);
-	mainSizer->Add(usernameTextBox, 1, wxEXPAND);
-	mainBox->Add(mainSizer, 1, wxEXPAND | wxALL, 10);
+	flexSizer->Add(ipLabel);
+	flexSizer->Add(ipSizer, 1, wxEXPAND);
+	flexSizer->Add(portLabel);
+	flexSizer->Add(portTextBox, 1, wxEXPAND);
+	flexSizer->Add(usernameLable);
+	flexSizer->Add(usernameTextBox, 1, wxEXPAND);
+	mainSizer->Add(flexSizer, 1, wxEXPAND | wxALL, 10);
+	mainSizer->Add(buttonSizer, 1, wxEXPAND);
 
-	panelGlobal->SetSizer(mainBox);
+	panelGlobal->SetSizer(mainSizer);
 	Centre();
 }
 
 CSettings::~CSettings()
 {
 
+}
+
+void CSettings::onButtonOk(wxCommandEvent& WXUNUSED(event))
+{
+	Close(true);
+}
+
+void CSettings::onButtonCancel(wxCommandEvent& WXUNUSED(event))
+{
+	Close(true);
 }

@@ -52,8 +52,8 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	wxTextCtrl* textCtrlBox = new wxTextCtrl(panelInput, wxID_ANY, m_inputText, wxDefaultPosition, wxSize(110, 100), wxTE_MULTILINE);
 	secondaryInputSizer->Add(textCtrlBox, 1, wxEXPAND | wxTOP | wxBOTTOM | wxLEFT, 5);
 	// Buttons
-	wxButton* buttonSend = new wxButton(panelInput, wxID_ANY, "Send", wxDefaultPosition, wxSize(110, 30), wxTE_MULTILINE);
-	wxButton* buttonAddfile = new wxButton(panelInput, wxID_ANY, "Add a file", wxDefaultPosition, wxSize(110, 30), wxTE_MULTILINE);
+	wxButton* buttonSend = new wxButton(panelInput, myID_SENDBUTTON, "Send", wxDefaultPosition, wxSize(110, 30), wxTE_MULTILINE);
+	wxButton* buttonAddfile = new wxButton(panelInput, myID_FILEBUTTON, "Add a file", wxDefaultPosition, wxSize(110, 30), wxTE_MULTILINE);
 	secondaryInputButtonSizer->Add(buttonSend, 0, wxEXPAND | wxALL, 5);
 	secondaryInputButtonSizer->Add(buttonAddfile, 0, wxEXPAND | wxRIGHT | wxBOTTOM | wxLEFT, 5);
 	secondaryInputSizer->Add(secondaryInputButtonSizer);
