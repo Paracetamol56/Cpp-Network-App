@@ -93,7 +93,8 @@ void CMain::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void CMain::OnSettings(wxCommandEvent& WXUNUSED(event))
 {
-
+	m_settingsFrame = new CSettings;
+	m_settingsFrame->Show();
 }
 
 void CMain::OnAbout(wxCommandEvent& WXUNUSED(event))

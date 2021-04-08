@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "CSettings.h"
 #include "wx/wx.h"
 #include "wx/menu.h"
 #include "wx/utils.h"
@@ -29,6 +30,8 @@ protected:
 	wxMenuBar* m_mainMenuBar;
 	wxMenu* m_fileMenu;
 	wxMenu* m_helpMenu;
+	// Child frame
+	CSettings* m_settingsFrame;
 
 private:
 	// Data from input

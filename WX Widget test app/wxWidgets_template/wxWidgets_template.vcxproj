@@ -21,10 +21,12 @@
   <ItemGroup>
     <ClInclude Include="CApp.h" />
     <ClInclude Include="CMain.h" />
+    <ClInclude Include="CSettings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CApp.cpp" />
     <ClCompile Include="CMain.cpp" />
+    <ClCompile Include="CSettings.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
