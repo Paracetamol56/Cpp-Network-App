@@ -7,6 +7,8 @@
 #pragma once
 
 #include "wx/wx.h"
+#include "wx/filename.h"
+#include "wx/mimetype.h"
 #include <chrono>
 #include <ctime>
 #include <string>

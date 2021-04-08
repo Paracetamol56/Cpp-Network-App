@@ -12,7 +12,7 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 	m_contentTime = std::chrono::system_clock::now();
 	std::string strTime = "";
 	// Time point to string conversion
-	// >>> CREDIT : Adrian Maire
+	// >>> CREDIT : Adrian Maire > https://stackoverflow.com/questions/34857119/how-to-convert-stdchronotime-point-to-string
 	{
 		std::time_t tt = std::chrono::system_clock::to_time_t(m_contentTime);
 		//std::tm tm = *std::gmtime(&tt); // GMT (UTC)
@@ -42,17 +42,21 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 	wxBoxSizer* headerSizer = new wxBoxSizer(wxHORIZONTAL);
 
 	// Static text
+	// Time label
 	wxStaticText* timeLabel = new wxStaticText(this, wxID_ANY, strTime, wxDefaultPosition, wxSize(100, -1), wxALIGN_RIGHT);
 	timeLabel->SetForegroundColour(wxColor(90, 100, 100));
 	timeLabel->SetFont(wxFont(10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 
+	// Username label
 	wxStaticText* usernameLabel = new wxStaticText(this, wxID_ANY, m_username, wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	usernameLabel->SetForegroundColour(wxColor(90, 100, 100));
 	usernameLabel->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD, false));
 	
+	// Structure the two previous labels in a sizer
 	headerSizer->Add(usernameLabel, 2, wxEXPAND);
 	headerSizer->Add(timeLabel, 1, wxEXPAND);
 
+	// Main message
 	wxStaticText* mainMessage = new wxStaticText(this, wxID_ANY, m_textMessage, wxDefaultPosition, wxDefaultSize, wxTE_BESTWRAP);
 	mainMessage->SetForegroundColour(wxColor(20, 20, 20));
 	mainMessage->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
@@ -61,6 +65,17 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 	// Add everything to the sizer
 	mainSizer->Add(headerSizer, 0, wxEXPAND | wxALL, 5);
 	mainSizer->Add(mainMessage, 1, wxEXPAND | wxALL, 5);
+
+	// File management
+	// >>> CREDIT : Benedict > https://forums.wxwidgets.org/viewtopic.php?t=6664
+	if (m_filePath != "")
+	{
+		mainSizer->AddSpacer(50);
+		wxFileName fname(m_filePath);
+		wxFileType* ftype = wxTheMimeTypesManager->GetFileTypeFromExtension(fname.GetExt());
+		if(ftype. == "jpgfile")
+	}
+
 	// Sizer structuration
 	this->SetSizer(mainSizer);
 
