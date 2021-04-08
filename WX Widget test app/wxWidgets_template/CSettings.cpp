@@ -71,7 +71,7 @@ CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1),
 	mainSizer->Add(buttonSizer, 1, wxEXPAND);
 
 	panelGlobal->SetSizer(mainSizer);
-	Centre();
+	mainSizer->Layout();
 
 	// ======== END GUI GENERATION ======== //
 }

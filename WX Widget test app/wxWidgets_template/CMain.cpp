@@ -68,6 +68,7 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	secondaryInputSizer->Add(secondaryInputButtonSizer);
 
 	// Sizer structuration
+	panelOutput->SetSizer(secondaryOutputSizer);
 	this->SetSizer(mainSizer);
 	panelInput->SetSizer(secondaryInputSizer);
 	mainSizer->Layout();
@@ -75,8 +76,8 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	// ========= END GUI GENERATION ======== //
 
 	// Test content
-	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, "Hello world", ""));
-	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, "world Hello ", ""));
+	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, "C'est moi le boss", "Hello world", ""));
+	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, "Non, c'est moi", "world Hello\nPutain, le mec qui a fait ca, il est trop malin\nWoaw on ecrit sur trois lignes !\nEt maintenant une ligne super longue pour voir si le retour de ligne marche bien, donc là par exemple, je sais pas trop quoi dire donc je pense que je vais m'arreter", ""));
 
 	updateContent();
 }
@@ -108,7 +109,7 @@ void CMain::updateContent()
 	secondaryOutputSizer->Clear();
 	for (CContent* iContent : m_contentList)
 	{
-		secondaryOutputSizer->Add(iContent, 1, wxEXPAND | wxALL, 5);
+		secondaryOutputSizer->Add(iContent, 0, wxEXPAND | wxALL, 5);
 	}
 }
 
