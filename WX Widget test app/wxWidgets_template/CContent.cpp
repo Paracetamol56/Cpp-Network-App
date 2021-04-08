@@ -6,7 +6,7 @@
 
 #include "CContent.h"
 
-CContent::CContent(std::string textMessage, std::string filePath)
+CContent::CContent(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style, const wxString& name, const wxString textMessage, const wxString filePath) : wxPanel(parent, id, pos, size, style, name)
 {
 	// Update the time atribut to the current system time
 	m_contentTime = std::chrono::system_clock::now();
@@ -19,7 +19,7 @@ CContent::CContent(std::string textMessage, std::string filePath)
 
 	// ========== GUI GENERATION ========== //
 	
-
+	this->SetBackgroundColour(wxColour(255, 0, 0));
 
 	// ======== END GUI GENERATION ======== //
 }

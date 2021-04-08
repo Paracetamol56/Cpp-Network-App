@@ -72,6 +72,10 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	mainSizer->Layout();
 
 	// ========= END GUI GENERATION ======== //
+
+	// Test content
+	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxPanelNameStr, "Hello world", ""));
+
 }
 
 /// <summary>

@@ -7,9 +7,11 @@
 #pragma once
 
 #include "CSettings.h"
+#include "CContent.h"
 #include "wx/wx.h"
 #include "wx/menu.h"
 #include "wx/utils.h"
+#include <list>
 
 wxDEFINE_EVENT(myID_SETTINGS, wxCommandEvent);
 wxDEFINE_EVENT(myID_SENDBUTTON, wxCommandEvent);
@@ -37,6 +39,7 @@ private:
 	// Data from input
 	wxString m_inputText = "";
 	wxString m_inputFilePath = "";
+	std::list<CContent*> m_contentList = {};
 
 public:
 	// Getter for inputs data
