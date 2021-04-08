@@ -14,17 +14,22 @@ wxEND_EVENT_TABLE()
 
 CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1), wxSize(290, 170), wxDEFAULT_FRAME_STYLE &~(wxRESIZE_BORDER))
 {
+	// ========== GUI GENERATION ========== //
+	
 	// Panel
 	wxPanel* panelGlobal = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(500, 500), wxTE_MULTILINE);
+
 	// Sizer
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	wxFlexGridSizer* flexSizer = new wxFlexGridSizer(3, 2, 5, 30);
 	wxBoxSizer* ipSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
+	
 	// Static text labels
 	wxStaticText* ipLabel = new wxStaticText(panelGlobal, -1, wxT("Destination IP"));
 	wxStaticText* portLabel = new wxStaticText(panelGlobal, -1, wxT("Port"));
 	wxStaticText* usernameLable = new wxStaticText(panelGlobal, -1, wxT("Username"));
+	
 	// IP inputs
 	wxTextCtrl* ipTextBox1 = new wxTextCtrl(panelGlobal, wxID_ANY, m_IPAdress01Input, wxDefaultPosition, wxSize(30, -1));
 	wxTextCtrl* ipTextBox2 = new wxTextCtrl(panelGlobal, wxID_ANY, m_IPAdress02Input, wxDefaultPosition, wxSize(30, -1));
@@ -33,6 +38,8 @@ CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1),
 	wxStaticText* ipSemicolon1 = new wxStaticText(panelGlobal, -1, wxT(" : "));
 	wxStaticText* ipSemicolon2 = new wxStaticText(panelGlobal, -1, wxT(" : "));
 	wxStaticText* ipSemicolon3 = new wxStaticText(panelGlobal, -1, wxT(" : "));
+	
+	// Add everything to the sizer
 	ipSizer->Add(ipTextBox1, 1, wxEXPAND);
 	ipSizer->Add(ipSemicolon1);
 	ipSizer->Add(ipTextBox2, 1, wxEXPAND);
@@ -40,10 +47,13 @@ CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1),
 	ipSizer->Add(ipTextBox3, 1, wxEXPAND);
 	ipSizer->Add(ipSemicolon3);
 	ipSizer->Add(ipTextBox4, 1, wxEXPAND);
+	
 	// Port input
 	wxTextCtrl* portTextBox = new wxTextCtrl(panelGlobal, -1);
+	
 	// Username input
 	wxTextCtrl* usernameTextBox = new wxTextCtrl(panelGlobal, -1, wxT(""), wxPoint(-1, -1), wxSize(-1, -1));
+	
 	// Buttons
 	wxButton* buttonOk = new wxButton(panelGlobal, myID_OKBUTTON, "OK", wxDefaultPosition, wxSize(110, 30));
 	wxButton* buttonCancel = new wxButton(panelGlobal, myID_CANCELBUTTON, "Cancel", wxDefaultPosition, wxSize(110, 30));
@@ -62,6 +72,8 @@ CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1),
 
 	panelGlobal->SetSizer(mainSizer);
 	Centre();
+
+	// ======== END GUI GENERATION ======== //
 }
 
 CSettings::~CSettings()

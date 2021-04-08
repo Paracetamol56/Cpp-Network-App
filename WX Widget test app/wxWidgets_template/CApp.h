@@ -15,16 +15,18 @@
 class CApp : public wxApp
 {
 public:
+	
 	// Public constructor and destructor
 	CApp();
 	~CApp();
 
 private:
+	
 	// Private data to store the main frame
 	CMain* m_frame01 = nullptr;
 
 public:
+	
 	// Launcher methode
 	virtual bool OnInit();
 };
-

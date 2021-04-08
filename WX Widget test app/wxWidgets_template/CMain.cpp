@@ -21,8 +21,10 @@ wxEND_EVENT_TABLE()
 CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30), wxSize(615, 865))
 {
 	// ======== MENU BAR CREATION ========//
+	
 	// Main menu bar
 	m_mainMenuBar = new wxMenuBar();
+	
 	// Menus creation
 	m_fileMenu = new wxMenu();
 	m_helpMenu = new wxMenu();
@@ -31,26 +33,32 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 
 	m_mainMenuBar->Append(m_fileMenu, _T("&File"));
 	m_mainMenuBar->Append(m_helpMenu, _T("&Help"));
+	
 	// File menu
 	m_fileMenu->Append(myID_SETTINGS, _T("Connection Settigs\tCtrl+T"));
 	m_fileMenu->AppendSeparator();
 	m_fileMenu->Append(wxID_EXIT, _T("&Quit"));
+	
 	// Help menu
 	m_helpMenu->Append(wxID_ABOUT, _T("&About\tF1"));
 
-	// ========== GUI CREATION ========== //
+	// ========== GUI GENERATION ========== //
+	
 	// Sizers
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* secondaryInputSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* secondaryInputButtonSizer = new wxBoxSizer(wxVERTICAL);
+	
 	// Panels
 	wxPanel* panelOutput = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
 	wxPanel* panelInput = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
 	mainSizer->Add(panelOutput, 1, wxEXPAND | wxALL, 5);
 	mainSizer->Add(panelInput, 0, wxEXPAND | wxRIGHT | wxBOTTOM | wxLEFT, 5);
+	
 	// Text input
 	wxTextCtrl* textCtrlBox = new wxTextCtrl(panelInput, wxID_ANY, m_inputText, wxDefaultPosition, wxSize(110, 100), wxTE_MULTILINE);
 	secondaryInputSizer->Add(textCtrlBox, 1, wxEXPAND | wxTOP | wxBOTTOM | wxLEFT, 5);
+	
 	// Buttons
 	wxButton* buttonSend = new wxButton(panelInput, myID_SENDBUTTON, "Send", wxDefaultPosition, wxSize(110, 30), wxTE_MULTILINE);
 	wxButton* buttonAddfile = new wxButton(panelInput, myID_FILEBUTTON, "Add a file", wxDefaultPosition, wxSize(110, 30), wxTE_MULTILINE);
@@ -62,6 +70,8 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	this->SetSizer(mainSizer);
 	panelInput->SetSizer(secondaryInputSizer);
 	mainSizer->Layout();
+
+	// ========= END GUI GENERATION ======== //
 }
 
 /// <summary>
