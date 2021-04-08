@@ -11,8 +11,8 @@ wxBEGIN_EVENT_TABLE(CMain, wxFrame)
 EVT_MENU(wxID_EXIT, CMain::OnQuit)
 EVT_MENU(myID_SETTINGS, CMain::OnSettings)
 EVT_MENU(wxID_ABOUT, CMain::OnAbout)
-EVT_BUTTON(myID_SENDBUTTON, CMain::OnAbout)
-EVT_BUTTON(myID_FILEBUTTON, CMain::OnAbout)
+EVT_BUTTON(myID_SENDBUTTON, CMain::OnButtonSend)
+EVT_BUTTON(myID_FILEBUTTON, CMain::OnButtonAddfile)
 wxEND_EVENT_TABLE()
 
 /// <summary>
@@ -46,6 +46,7 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	
 	// Sizers
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+	secondaryOutputSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* secondaryInputSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* secondaryInputButtonSizer = new wxBoxSizer(wxVERTICAL);
 	
@@ -74,8 +75,10 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	// ========= END GUI GENERATION ======== //
 
 	// Test content
-	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, wxPanelNameStr, "Hello world", ""));
+	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, "Hello world", ""));
+	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, "world Hello ", ""));
 
+	updateContent();
 }
 
 /// <summary>
@@ -98,6 +101,15 @@ wxString CMain::getInputData()
 		return(m_inputText);
 	}
 	return("");
+}
+
+void CMain::updateContent()
+{
+	secondaryOutputSizer->Clear();
+	for (CContent* iContent : m_contentList)
+	{
+		secondaryOutputSizer->Add(iContent, 1, wxEXPAND | wxALL, 5);
+	}
 }
 
 void CMain::OnQuit(wxCommandEvent& WXUNUSED(event))

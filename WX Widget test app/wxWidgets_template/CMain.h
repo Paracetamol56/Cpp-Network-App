@@ -36,6 +36,8 @@ protected:
 	CSettings* m_settingsFrame;
 
 private:
+	// Output sizer
+	wxBoxSizer* secondaryOutputSizer;
 	// Data from input
 	wxString m_inputText = "";
 	wxString m_inputFilePath = "";
@@ -44,6 +46,8 @@ private:
 public:
 	// Getter for inputs data
 	wxString getInputData();
+	// Main update methode
+	void updateContent();
 
 private:
 	// Menu events
