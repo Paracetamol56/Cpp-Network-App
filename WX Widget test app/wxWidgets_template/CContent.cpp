@@ -73,7 +73,7 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 		mainSizer->AddSpacer(50);
 		wxFileName fname(m_filePath);
 		wxFileType* ftype = wxTheMimeTypesManager->GetFileTypeFromExtension(fname.GetExt());
-		if(ftype. == "jpgfile")
+		
 	}
 
 	// Sizer structuration
