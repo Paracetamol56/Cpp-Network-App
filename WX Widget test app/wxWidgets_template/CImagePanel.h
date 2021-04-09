@@ -10,8 +10,6 @@
 #pragma once
 
 #include <wx/wx.h>
-#include <wx/sizer.h>
-
 
 // >>> CREDIT : wxWidgets Wiki > https://wiki.wxwidgets.org/An_image_panel
 class CImagePanel : public wxPanel
@@ -22,7 +20,7 @@ private:
     int w, h;
 
 public:
-    CImagePanel(wxFrame* parent, wxString filePath, wxBitmapType format);
+    CImagePanel(wxPanel* parent, wxString filePath, wxBitmapType format);
     ~CImagePanel();
 
     void paintEvent(wxPaintEvent& evt);

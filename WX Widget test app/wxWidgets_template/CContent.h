@@ -36,5 +36,7 @@ protected:
 	wxString m_textMessage = "";
 	// File path
 	wxString m_filePath = "";
+	//Image
+	CImagePanel* imagePanel;
 };
 

@@ -42,7 +42,7 @@ wxEND_EVENT_TABLE()
  void wxImagePanel::keyReleased(wxKeyEvent& event) {}
  */
 
-CImagePanel::CImagePanel(wxFrame* parent, wxString filePath, wxBitmapType format) : wxPanel(parent)
+CImagePanel::CImagePanel(wxPanel* parent, wxString filePath, wxBitmapType format) : wxPanel(parent)
 {
     // load the file... ideally add a check to see if loading was successful
     image.LoadFile(filePath, format);
