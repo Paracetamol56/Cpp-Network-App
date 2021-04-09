@@ -21,6 +21,7 @@ private:
 
 public:
     CImagePanel(wxPanel* parent, wxString filePath, wxBitmapType format);
+    CImagePanel(wxFrame* parent, wxString filePath, wxBitmapType format);
     ~CImagePanel();
 
     void paintEvent(wxPaintEvent& evt);

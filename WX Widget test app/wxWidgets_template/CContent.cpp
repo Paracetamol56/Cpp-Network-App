@@ -82,7 +82,10 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 		
 		// Get the file name
 		size_t npos = m_filePath.rfind("/");
-		npos = m_filePath.rfind("\\");
+		if (npos > m_filePath.size())
+		{
+			npos = m_filePath.rfind("\\");
+		}
 		wxString filename = m_filePath.substr(npos + 1);
 
 		// File name label
@@ -90,12 +93,12 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 		fileNameLabel->SetForegroundColour(wxColor(90, 100, 100));
 		fileNameLabel->SetFont(wxFont(10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 
-		mainSizer->Add(fileNameLabel);
+		mainSizer->Add(fileNameLabel, 1, wxEXPAND | wxALL, 5);
 
 		//Image render
-		imagePanel = new CImagePanel(this, m_filePath, wxBITMAP_TYPE_JPEG);
+		imagePanel = new CImagePanel(this, m_filePath, wxBITMAP_TYPE_ANY);
 		
-		mainSizer->Add(imagePanel);
+		mainSizer->Add(imagePanel, 1, wxEXPAND | wxALL, 5);
 	}
 
 	// Sizer structuration

@@ -7,6 +7,11 @@
  * Available on GitHub at https://github.com/Paracetamol56/Cpp-Network-App
  */
 
+// Constructor macro
+#define PANELCTOR   image.LoadFile(filePath, format);\
+                    w = -1;\
+                    h = -1;
+
  // >>> CREDIT : wxWidgets Wiki > https://wiki.wxwidgets.org/An_image_panel
 #include "CImagePanel.h"
 
@@ -42,13 +47,18 @@ wxEND_EVENT_TABLE()
  void wxImagePanel::keyReleased(wxKeyEvent& event) {}
  */
 
-CImagePanel::CImagePanel(wxPanel* parent, wxString filePath, wxBitmapType format) : wxPanel(parent)
+CImagePanel::CImagePanel(wxPanel* parent, wxString filePath, wxBitmapType format) : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, -1))
 {
     // load the file... ideally add a check to see if loading was successful
-    image.LoadFile(filePath, format);
-    w = -1;
-    h = -1;
+    PANELCTOR
+    SetBackgroundColour(wxColor(255, 0, 0));
 }
+
+CImagePanel::CImagePanel(wxFrame* parent, wxString filePath, wxBitmapType format) : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
+{
+    PANELCTOR
+}
+
 
 CImagePanel::~CImagePanel()
 {

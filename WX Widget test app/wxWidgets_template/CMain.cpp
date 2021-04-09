@@ -55,6 +55,7 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	
 	// Panels
 	wxPanel* panelOutput = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
+	panelOutput->SetScrollbar(wxVERTICAL, 0, 10, 100, true);
 	wxPanel* panelInput = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
 	mainSizer->Add(panelOutput, 1, wxEXPAND | wxALL, 5);
 	mainSizer->Add(panelInput, 0, wxEXPAND | wxRIGHT | wxBOTTOM | wxLEFT, 5);
