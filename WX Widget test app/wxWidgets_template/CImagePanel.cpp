@@ -11,11 +11,6 @@
 
 CImagePanel::CImagePanel(wxFrame* parent, wxString filePath) : wxPanel(parent)
 {
-	wxBitmap* bitmapImage = new wxBitmap(this, wxID_ANY, wxBitmap(m_filePath, wxBITMAP_TYPE_ANY), wxDefaultPosition, wxSize(-1, 200), 0);
-	wxImage* image = new wxImage(bitmapImage->ConvertToImage());
-	image->Rescale(0.5, 0.5);
-	wxDC* dc = new wxDC(this);
-	dc->DrawBitmap(*bitmapImage, 0, 0, false);
 }
 
 CImagePanel::~CImagePanel()

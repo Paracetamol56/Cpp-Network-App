@@ -1,16 +1,16 @@
 /*
  * Created on Tue Apr 07 2021
  *
- * Copyright (c) 2021 - Mathéo G & Sahel H - All Right Reserved
- *
- * Licensed under the Apache License, Version 2.0
- * Available on GitHub at https://github.com/Paracetamol56/Cpp-Network-App
+ * Copyright (c) 2021 - Mathéo Galuba
  */
 
 #include "CContent.h"
 
 CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, const wxString textMessage, const wxString filePath) : wxPanel(parent, id, wxDefaultPosition, wxDefaultSize)
 {
+	// Install all supported image handler
+	wxInitAllImageHandlers();
+
 	// Update the time atribut to the current system time
 	m_contentTime = std::chrono::system_clock::now();
 	std::string strTime = "";
@@ -74,9 +74,6 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 	// >>> CREDIT : Benedict > https://forums.wxwidgets.org/viewtopic.php?t=6664
 	if (m_filePath != "")
 	{
-		// Install all supported image handler
-		wxInitAllImageHandlers();
-
 		// Spacxer in the sizer
 		mainSizer->AddSpacer(25);
 		
@@ -94,12 +91,8 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 
 		//Image render
 
-		wxBitmap* bitmapImage = new wxBitmap(this, wxID_ANY, wxBitmap(m_filePath, wxBITMAP_TYPE_ANY), wxDefaultPosition, wxSize(-1, 200), 0);
-		wxImage* image = new wxImage(bitmapImage->ConvertToImage());
-		image->Rescale(0.5, 0.5);
-		wxDC* dc = new wxDC(this);
-		dc->DrawBitmap(*bitmapImage, 0, 0, false);
-		mainSizer->Add(*dc);
+		wxBitmap* image = new wxBitmap(this, wxID_ANY, wxBitmap(m_filePath, wxBITMAP_TYPE_ANY), wxDefaultPosition, wxSize(-1, 200), 0);
+		mainSizer->Add(image);
 	}
 
 	// Sizer structuration

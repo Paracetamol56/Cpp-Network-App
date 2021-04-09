@@ -17,9 +17,7 @@
 class CImagePanel : public wxPanel
 {
 private:
-    wxBitmap* m_bitmapImage;
-    wxImage* m_image;
-    wxDC* m_dc;
+
 
 public:
     CImagePanel(wxFrame* parent, wxString filePath);
