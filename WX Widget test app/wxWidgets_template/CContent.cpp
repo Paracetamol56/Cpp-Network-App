@@ -11,9 +11,6 @@
 
 CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, const wxString textMessage, const wxString filePath) : wxPanel(parent, id, wxDefaultPosition, wxDefaultSize)
 {
-	// Install all supported image handler
-	wxInitAllImageHandlers();
-
 	// Update the time atribut to the current system time
 	m_contentTime = std::chrono::system_clock::now();
 	std::string strTime = "";
@@ -77,6 +74,9 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 	// >>> CREDIT : Benedict > https://forums.wxwidgets.org/viewtopic.php?t=6664
 	if (m_filePath != "")
 	{
+		// Install all supported image handler
+		wxInitAllImageHandlers();
+
 		// Spacxer in the sizer
 		mainSizer->AddSpacer(25);
 		
@@ -97,8 +97,9 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 		wxBitmap* bitmapImage = new wxBitmap(this, wxID_ANY, wxBitmap(m_filePath, wxBITMAP_TYPE_ANY), wxDefaultPosition, wxSize(-1, 200), 0);
 		wxImage* image = new wxImage(bitmapImage->ConvertToImage());
 		image->Rescale(0.5, 0.5);
-		wxImagePane
-		mainSizer->Add(image);
+		wxDC* dc = new wxDC(this);
+		dc->DrawBitmap(*bitmapImage, 0, 0, false);
+		mainSizer->Add(*dc);
 	}
 
 	// Sizer structuration

@@ -17,13 +17,11 @@
 class CImagePanel : public wxPanel
 {
 private:
-    wxBitmap image;
+    wxBitmap* m_bitmapImage;
+    wxImage* m_image;
+    wxDC* m_dc;
 
 public:
-    CImagePanel(wxFrame* parent, wxString file, wxBitmapType format);
+    CImagePanel(wxFrame* parent, wxString filePath);
     ~CImagePanel();
-
-    void paintEvent(wxPaintEvent& evt);
-
-    void render(wxDC& dc);
 };
