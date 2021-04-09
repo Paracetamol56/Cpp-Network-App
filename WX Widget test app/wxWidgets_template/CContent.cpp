@@ -57,7 +57,7 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 	headerSizer->Add(timeLabel, 1, wxEXPAND);
 
 	// Main message
-	wxStaticText* mainMessage = new wxStaticText(this, wxID_ANY, m_textMessage, wxDefaultPosition, wxDefaultSize, wxTE_BESTWRAP);
+	wxStaticText* mainMessage = new wxStaticText(this, wxID_ANY, m_textMessage, wxDefaultPosition, wxDefaultSize, wxTE_BESTWRAP | wxTE_MULTILINE);
 	mainMessage->SetForegroundColour(wxColor(20, 20, 20));
 	mainMessage->SetFont(wxFont(11, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
 	mainMessage->Wrap(this->GetSize().GetWidth());
