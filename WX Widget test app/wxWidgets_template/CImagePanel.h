@@ -17,9 +17,18 @@
 class CImagePanel : public wxPanel
 {
 private:
-
+    wxImage image;
+    wxBitmap resized;
+    int w, h;
 
 public:
-    CImagePanel(wxFrame* parent, wxString filePath);
+    CImagePanel(wxFrame* parent, wxString filePath, wxBitmapType format);
     ~CImagePanel();
+
+    void paintEvent(wxPaintEvent& evt);
+    void paintNow();
+    void OnSize(wxSizeEvent& event);
+    void render(wxDC& dc);
+
+    wxDECLARE_EVENT_TABLE();
 };

@@ -74,6 +74,9 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 	// >>> CREDIT : Benedict > https://forums.wxwidgets.org/viewtopic.php?t=6664
 	if (m_filePath != "")
 	{
+		// Install all supported image handler
+		wxInitAllImageHandlers();
+
 		// Spacxer in the sizer
 		mainSizer->AddSpacer(25);
 		
@@ -91,8 +94,44 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 
 		//Image render
 
-		wxBitmap* image = new wxBitmap(this, wxID_ANY, wxBitmap(m_filePath, wxBITMAP_TYPE_ANY), wxDefaultPosition, wxSize(-1, 200), 0);
-		mainSizer->Add(image);
+		wxBitmap* bitMapImage = new wxBitmap(m_filePath, wxBITMAP_TYPE_JPEG);
+		
+		wxPaintDC dc(this);
+
+		float fWScale = 1.0f;   // horizontal scaling factor
+		float fHScale = 1.0f;   // vertical scaling factor
+		int iImageH = -1;       // the bitmap's height
+		int iImageW = -1;       // the bitmap's width
+		int iThisH = 50;        // the panel's height
+		int iThisW = -1;        // the panel's width
+
+		iImageH = (*bitMapImage).GetHeight();
+		iImageW = (*bitMapImage).GetWidth();
+
+		GetSize(&iThisW, &iThisH);
+
+		if ((iImageH > 0) && (iImageW > 0))
+		{
+			// calculate the scaling factor for the 2 dimensions
+			fHScale = (float)iThisH / (float)iImageH;
+			fWScale = (float)iThisW / (float)iImageW;
+
+			// always take the smaller scaling factor,
+			// so that the bitmap will always fit into the panel's paintable area
+			if (fHScale < fWScale)
+			{
+				fWScale = fHScale;
+			}
+			else
+			{
+				fHScale = fWScale;
+			}
+		}
+
+		dc.SetUserScale(fHScale, fWScale);
+		dc.DrawBitmap(*bitMapImage, 0, 0, false);
+		
+		//mainSizer->Add(bitMapImage);
 	}
 
 	// Sizer structuration

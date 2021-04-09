@@ -13,6 +13,7 @@
 #include <wx/image.h>
 #include <wx/filedlg.h>
 #include <wx/dc.h>
+#include "CImagePanel.h"
 #include <chrono>
 #include <ctime>
 #include <string>
