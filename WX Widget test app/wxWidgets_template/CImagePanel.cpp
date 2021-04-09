@@ -9,8 +9,8 @@
 
 // Constructor macro
 #define PANELCTOR   image.LoadFile(filePath, format);\
-                    w = -1;\
-                    h = -1;
+                    w = image.GetSize().GetWidth();\
+                    h = image.GetSize().GetHeight();
 
  // >>> CREDIT : wxWidgets Wiki > https://wiki.wxwidgets.org/An_image_panel
 #include "CImagePanel.h"
@@ -47,11 +47,10 @@ wxEND_EVENT_TABLE()
  void wxImagePanel::keyReleased(wxKeyEvent& event) {}
  */
 
-CImagePanel::CImagePanel(wxPanel* parent, wxString filePath, wxBitmapType format) : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(-1, -1))
+CImagePanel::CImagePanel(wxPanel* parent, wxString filePath, wxBitmapType format) : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(1000, 200))
 {
     // load the file... ideally add a check to see if loading was successful
     PANELCTOR
-    SetBackgroundColour(wxColor(255, 0, 0));
 }
 
 CImagePanel::CImagePanel(wxFrame* parent, wxString filePath, wxBitmapType format) : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize)
@@ -109,12 +108,14 @@ void CImagePanel::OnSize(wxSizeEvent& event)
  */
 void CImagePanel::render(wxDC& dc)
 {
-    int neww, newh;
-    dc.GetSize(&neww, &newh);
+    // Fix a static value for h
+    int newh = 200;
+    // Compute a new value for w
+    int neww = w * (200.0f / h);
 
     if (neww != w || newh != h)
     {
-        resized = wxBitmap(image.Scale(neww, newh /*, wxIMAGE_QUALITY_HIGH*/));
+        resized = wxBitmap(image.Scale(neww, newh, wxIMAGE_QUALITY_HIGH));
         w = neww;
         h = newh;
         dc.DrawBitmap(resized, 0, 0, false);
