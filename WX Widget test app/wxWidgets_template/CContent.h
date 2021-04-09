@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "wx/wx.h"
-#include "wx/image.h"
+#include <wx/wx.h>
+#include <wx/image.h>
 #include <chrono>
 #include <ctime>
 #include <string>

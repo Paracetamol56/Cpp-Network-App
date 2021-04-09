@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "wx/wx.h"
-#include "wx/utils.h"
+#include <wx/wx.h>
+#include <wx/utils.h>
 
 wxDEFINE_EVENT(myID_OKBUTTON, wxCommandEvent);
 wxDEFINE_EVENT(myID_CANCELBUTTON, wxCommandEvent);

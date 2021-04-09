@@ -30,7 +30,7 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 	m_textMessage = textMessage;
 
 	// Initialize the file path string atribut
-	m_filePath = dialog.GetPath();
+	m_filePath = filePath;
 
 	// ========== GUI GENERATION ========== //
 	

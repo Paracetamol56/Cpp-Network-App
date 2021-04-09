@@ -8,9 +8,9 @@
 
 #include "CSettings.h"
 #include "CContent.h"
-#include "wx/wx.h"
-#include "wx/menu.h"
-#include "wx/utils.h"
+#include <wx/wx.h>
+#include <wx/menu.h>
+#include <wx/utils.h>
 #include <list>
 
 wxDEFINE_EVENT(myID_SETTINGS, wxCommandEvent);
