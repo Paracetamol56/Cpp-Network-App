@@ -1,16 +1,23 @@
 /*
  * Created on Tue Apr 07 2021
  *
- * Copyright (c) 2021 - Mathéo Galuba
+ * Copyright (c) 2021 - Mathéo G & Sahel H - All Right Reserved
+ *
+ * Licensed under the Apache License, Version 2.0
+ * Available on GitHub at https://github.com/Paracetamol56/Cpp-Network-App
  */
 
 #include "CContent.h"
 
 CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, const wxString textMessage, const wxString filePath) : wxPanel(parent, id, wxDefaultPosition, wxDefaultSize)
 {
+	// Install all supported image handler
+	wxInitAllImageHandlers();
+
 	// Update the time atribut to the current system time
 	m_contentTime = std::chrono::system_clock::now();
 	std::string strTime = "";
+
 	// Time point to string conversion
 	// >>> CREDIT : Adrian Maire > https://stackoverflow.com/questions/34857119/how-to-convert-stdchronotime-point-to-string
 	{
@@ -86,8 +93,11 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 		mainSizer->Add(fileNameLabel);
 
 		//Image render
-		wxStaticBitmap* image = new wxStaticBitmap(this, wxID_ANY, wxBitmap(m_filePath, wxBITMAP_TYPE_ANY), wxDefaultPosition, wxSize(-1, 200), 0);
 
+		wxBitmap* bitmapImage = new wxBitmap(this, wxID_ANY, wxBitmap(m_filePath, wxBITMAP_TYPE_ANY), wxDefaultPosition, wxSize(-1, 200), 0);
+		wxImage* image = new wxImage(bitmapImage->ConvertToImage());
+		image->Rescale(0.5, 0.5);
+		wxImagePane
 		mainSizer->Add(image);
 	}
 
