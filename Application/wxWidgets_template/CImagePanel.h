@@ -15,8 +15,8 @@
 class CImagePanel : public wxPanel
 {
 private:
-    wxImage image;
-    wxBitmap resized;
+    wxImage m_image;
+    wxBitmap m_resized;
     int w, h;
 
 public:

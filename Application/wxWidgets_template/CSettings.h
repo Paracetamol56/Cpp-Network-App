@@ -18,7 +18,6 @@ wxDEFINE_EVENT(myID_CANCELBUTTON, wxCommandEvent);
 class CSettings : public wxFrame
 {
 private:
-	
 	// IP adress
 	wxString m_IPAdress01Input = "";
 	wxString m_IPAdress02Input = "";

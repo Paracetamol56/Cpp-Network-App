@@ -37,6 +37,6 @@ protected:
 	// File path
 	wxString m_filePath = "";
 	//Image
-	CImagePanel* imagePanel;
+	CImagePanel* m_imagePanel = nullptr;
 };
 

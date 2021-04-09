@@ -96,9 +96,9 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 		mainSizer->Add(fileNameLabel, 1, wxEXPAND | wxALL, 5);
 
 		//Image render
-		imagePanel = new CImagePanel(this, m_filePath, wxBITMAP_TYPE_ANY);
+		m_imagePanel = new CImagePanel(this, m_filePath, wxBITMAP_TYPE_ANY);
 		
-		mainSizer->Add(imagePanel, 0, wxALL, 5);
+		mainSizer->Add(m_imagePanel, 0, wxALL, 5);
 	}
 
 	// Sizer structuration

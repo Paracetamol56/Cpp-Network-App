@@ -8,9 +8,9 @@
  */
 
 // Constructor macro
-#define PANELCTOR   image.LoadFile(filePath, format);\
-                    w = image.GetSize().GetWidth();\
-                    h = image.GetSize().GetHeight();
+#define PANELCTOR   m_image.LoadFile(filePath, format);\
+                    w = m_image.GetSize().GetWidth();\
+                    h = m_image.GetSize().GetHeight();
 
  // >>> CREDIT : wxWidgets Wiki > https://wiki.wxwidgets.org/An_image_panel
 #include "CImagePanel.h"
@@ -115,12 +115,12 @@ void CImagePanel::render(wxDC& dc)
 
     if (neww != w || newh != h)
     {
-        resized = wxBitmap(image.Scale(neww, newh, wxIMAGE_QUALITY_HIGH));
+        m_resized = wxBitmap(m_image.Scale(neww, newh, wxIMAGE_QUALITY_HIGH));
         w = neww;
         h = newh;
-        dc.DrawBitmap(resized, 0, 0, false);
+        dc.DrawBitmap(m_resized, 0, 0, false);
     }
     else {
-        dc.DrawBitmap(resized, 0, 0, false);
+        dc.DrawBitmap(m_resized, 0, 0, false);
     }
 }
