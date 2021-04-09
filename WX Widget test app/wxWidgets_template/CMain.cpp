@@ -77,7 +77,7 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 
 	// Test content
 	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, "C'est moi le boss", "Hello world", ""));
-	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, "Non, c'est moi", "world Hello\nPutain, le mec qui a fait ca, il est trop malin\nWoaw on ecrit sur trois lignes !\n Et maintenant une ligne super longue pour voir si le retour de ligne marche bien, donc là par exemple, je sais pas trop quoi dire donc je pense que je vais m'arreter", ""));
+	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, "Non, c'est moi", "world Hello\nPutain, le mec qui a fait ca, il est trop malin\nWoaw on ecrit sur trois lignes !\nEt maintenant une ligne super longue pour voir si le retour de ligne marche bien, donc là par exemple, je sais pas trop quoi dire donc je pense que je vais m'arreter", ""));
 	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, "C'est moi le boss", "Voila un fichier", "files/image.jpg"));
 
 	updateContent();

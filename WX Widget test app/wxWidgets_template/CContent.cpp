@@ -30,7 +30,7 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 	m_textMessage = textMessage;
 
 	// Initialize the file path string atribut
-	m_filePath = filePath;
+	m_filePath = dialog.GetPath();
 
 	// ========== GUI GENERATION ========== //
 	
@@ -70,10 +70,25 @@ CContent::CContent(wxWindow* parent, wxWindowID id, const wxString username, con
 	// >>> CREDIT : Benedict > https://forums.wxwidgets.org/viewtopic.php?t=6664
 	if (m_filePath != "")
 	{
-		mainSizer->AddSpacer(50);
-		wxFileName fname(m_filePath);
-		wxFileType* ftype = wxTheMimeTypesManager->GetFileTypeFromExtension(fname.GetExt());
+		// Spacxer in the sizer
+		mainSizer->AddSpacer(25);
 		
+		// Get the file name
+		size_t npos = m_filePath.rfind("/");
+		npos = m_filePath.rfind("\\");
+		wxString filename = m_filePath.substr(npos + 1);
+
+		// File name label
+		wxStaticText* fileNameLabel = new wxStaticText(this, wxID_ANY, filename, wxDefaultPosition, wxSize(100, -1), wxALIGN_RIGHT);
+		fileNameLabel->SetForegroundColour(wxColor(90, 100, 100));
+		fileNameLabel->SetFont(wxFont(10, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false));
+
+		mainSizer->Add(fileNameLabel);
+
+		//Image render
+		wxStaticBitmap* image = new wxStaticBitmap(this, wxID_ANY, wxBitmap(m_filePath, wxBITMAP_TYPE_ANY), wxDefaultPosition, wxSize(-1, 200), 0);
+
+		mainSizer->Add(image);
 	}
 
 	// Sizer structuration
