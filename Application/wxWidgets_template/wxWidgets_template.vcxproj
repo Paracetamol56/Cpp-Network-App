@@ -216,16 +216,16 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;WXUSINGDLL;wxMSVC_VERSION_AUTO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include; $(ProjectDir)lib\vc_dll\mswu\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\msvc;$(ProjectDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)lib\vc_dll</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)lib\vc142_dll</AdditionalLibraryDirectories>
       <AdditionalDependencies>wxbase31u.lib;wxmsw31u_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

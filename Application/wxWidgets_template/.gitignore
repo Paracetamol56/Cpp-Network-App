@@ -1,2 +1,6 @@
 include/*
 lib/*
+Release/*
+Debug/*
+ReleaseDLL/*
+DebugDLL/*
