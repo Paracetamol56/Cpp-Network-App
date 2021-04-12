@@ -49,40 +49,40 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	
 	// Sizers
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-	secondaryOutputSizer = new wxBoxSizer(wxVERTICAL);
-	wxBoxSizer* secondaryInputSizer = new wxBoxSizer(wxHORIZONTAL);
+	m_secondaryOutputSizer = new wxBoxSizer(wxVERTICAL);
+	m_secondaryInputSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* secondaryInputButtonSizer = new wxBoxSizer(wxVERTICAL);
 	
 	// Panels
-	wxPanel* panelOutput = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
-	panelOutput->SetScrollbar(wxVERTICAL, 0, 10, 100, true);
-	wxPanel* panelInput = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
-	mainSizer->Add(panelOutput, 1, wxEXPAND | wxALL, 5);
-	mainSizer->Add(panelInput, 0, wxEXPAND | wxRIGHT | wxBOTTOM | wxLEFT, 5);
+	m_panelOutput = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
+	m_panelOutput->SetScrollbar(wxVERTICAL, 0, 10, 100, true);
+	m_panelInput = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
+	mainSizer->Add(m_panelOutput, 1, wxEXPAND | wxALL, 5);
+	mainSizer->Add(m_panelInput, 0, wxEXPAND | wxRIGHT | wxBOTTOM | wxLEFT, 5);
 	
 	// Text input
-	wxTextCtrl* textCtrlBox = new wxTextCtrl(panelInput, wxID_ANY, m_inputText, wxDefaultPosition, wxSize(110, 100), wxTE_MULTILINE);
-	secondaryInputSizer->Add(textCtrlBox, 1, wxEXPAND | wxTOP | wxBOTTOM | wxLEFT, 5);
+	wxTextCtrl* textCtrlBox = new wxTextCtrl(m_panelInput, wxID_ANY, m_inputText, wxDefaultPosition, wxSize(110, 100), wxTE_MULTILINE);
+	m_secondaryInputSizer->Add(textCtrlBox, 1, wxEXPAND | wxTOP | wxBOTTOM | wxLEFT, 5);
 	
 	// Buttons
-	wxButton* buttonSend = new wxButton(panelInput, myID_SENDBUTTON, "Send", wxDefaultPosition, wxSize(110, 30), wxTE_MULTILINE);
-	wxButton* buttonAddfile = new wxButton(panelInput, myID_FILEBUTTON, "Add a file", wxDefaultPosition, wxSize(110, 30), wxTE_MULTILINE);
+	wxButton* buttonSend = new wxButton(m_panelInput, myID_SENDBUTTON, "Send", wxDefaultPosition, wxSize(110, 30), wxTE_MULTILINE);
+	wxButton* buttonAddfile = new wxButton(m_panelInput, myID_FILEBUTTON, "Add a file", wxDefaultPosition, wxSize(110, 30), wxTE_MULTILINE);
 	secondaryInputButtonSizer->Add(buttonSend, 0, wxEXPAND | wxALL, 5);
 	secondaryInputButtonSizer->Add(buttonAddfile, 0, wxEXPAND | wxRIGHT | wxBOTTOM | wxLEFT, 5);
-	secondaryInputSizer->Add(secondaryInputButtonSizer);
+	m_secondaryInputSizer->Add(secondaryInputButtonSizer);
 
 	// Sizer structuration
-	panelOutput->SetSizer(secondaryOutputSizer);
+	m_panelOutput->SetSizer(m_secondaryOutputSizer);
 	this->SetSizer(mainSizer);
-	panelInput->SetSizer(secondaryInputSizer);
+	m_panelInput->SetSizer(m_secondaryInputSizer);
 	mainSizer->Layout();
 
 	// ========= END GUI GENERATION ======== //
 
 	// Test content
-	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, "C'est moi le boss", "Hello world", ""));
-	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, "Non, c'est moi", "world Hello\nPutain, le mec qui a fait ca, il est trop malin\nWoaw on ecrit sur trois lignes !\nEt maintenant une ligne super longue pour voir si le retour de ligne marche bien, donc là par exemple, je sais pas trop quoi dire donc je pense que je vais m'arreter", ""));
-	m_contentList.push_back(new CContent(panelOutput, wxID_ANY, "C'est moi le boss", "Voila un fichier", "files/image.jpg"));
+	/*m_contentList.push_back(new CContent(m_panelOutput, wxID_ANY, "C'est moi le boss", "Hello world", ""));
+	m_contentList.push_back(new CContent(m_panelOutput, wxID_ANY, "Non, c'est moi", "world Hello\nPutain, le mec qui a fait ca, il est trop malin\nWoaw on ecrit sur trois lignes !\nEt maintenant une ligne super longue pour voir si le retour de ligne marche bien, donc là par exemple, je sais pas trop quoi dire donc je pense que je vais m'arreter", ""));
+	m_contentList.push_back(new CContent(m_panelOutput, wxID_ANY, "C'est moi le boss", "Voila un fichier", "files/image.jpg"));*/
 
 	updateContent();
 }
@@ -94,28 +94,14 @@ CMain::~CMain()
 {
 }
 
-
-wxString CMain::getInputData()
-{
-	if (m_inputText.IsEmpty() == false)
-	{
-		if (m_inputFilePath.IsEmpty() == false)
-		{
-			// The '\f' is use specify that a file path is following
-			m_inputText = m_inputText + '\f' + m_inputFilePath;
-		}
-		return(m_inputText);
-	}
-	return("");
-}
-
 void CMain::updateContent()
 {
-	secondaryOutputSizer->Clear();
+	m_secondaryOutputSizer->Clear();
 	for (CContent* iContent : m_contentList)
 	{
-		secondaryOutputSizer->Add(iContent, 0, wxEXPAND | wxALL, 5);
+		m_secondaryOutputSizer->Add(iContent, 0, wxEXPAND | wxALL, 5);
 	}
+	Layout();
 }
 
 void CMain::OnQuit(wxCommandEvent& WXUNUSED(event))
@@ -136,8 +122,19 @@ void CMain::OnAbout(wxCommandEvent& WXUNUSED(event))
 
 void CMain::OnButtonSend(wxCommandEvent& event)
 {
+	if (m_inputText.empty())
+	{
+		wxMessageDialog WarnEmptyDialog(nullptr, "You should enter a message", "WARNING", wxOK | wxCENTER, wxDefaultPosition);
+		WarnEmptyDialog.ShowModal();
+	}
+	else
+	{
+		m_contentList.push_back(new CContent(m_panelOutput, wxID_ANY, "C'est moi le boss", m_inputText, ""));
+		updateContent();
+	}
 }
 
 void CMain::OnButtonAddfile(wxCommandEvent& event)
 {
+
 }

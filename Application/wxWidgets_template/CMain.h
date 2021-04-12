@@ -15,6 +15,7 @@
 #include <wx/menu.h>
 #include <wx/utils.h>
 #include <wx/filedlg.h>
+#include <wx/msgdlg.h>
 #include <list>
 
 wxDEFINE_EVENT(myID_SETTINGS, wxCommandEvent);
@@ -40,8 +41,12 @@ protected:
 	CSettings* m_settingsFrame;
 
 private:
+	// Panels
+	wxPanel* m_panelOutput;
+	wxPanel* m_panelInput;
 	// Output sizer
-	wxBoxSizer* secondaryOutputSizer;
+	wxBoxSizer* m_secondaryOutputSizer;
+	wxBoxSizer* m_secondaryInputSizer;
 	// Data from input
 	wxString m_inputText = "";
 	wxString m_inputFilePath = "";
