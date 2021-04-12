@@ -125,12 +125,28 @@ void CMain::OnButtonSend(wxCommandEvent& event)
 	}
 	else
 	{
-		m_contentList.push_back(new CContent(m_panelOutput, wxID_ANY, "C'est moi le boss", m_inputText, ""));
+		m_contentList.push_back(new CContent(m_panelOutput, wxID_ANY, "C'est moi le boss", m_inputText, m_inputFilePath));
 		updateContent();
 	}
 }
 
 void CMain::OnButtonAddfile(wxCommandEvent& event)
 {
+	wxFileDialog openFileDialog(nullptr, _("Open a file"), "", "",
+			"", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	if (openFileDialog.ShowModal() == wxID_CANCEL)
+	{
+		return;
+	}
 
+	wxFileInputStream input_stream(openFileDialog.GetPath());
+	if (!input_stream.IsOk())
+	{
+		wxLogError("Cannot open file '%s'.", openFileDialog.GetPath());
+		return;
+	}
+	else
+	{
+		m_inputFilePath = openFileDialog.GetPath();
+	}
 }

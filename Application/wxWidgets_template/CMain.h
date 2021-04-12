@@ -14,6 +14,7 @@
 #include <wx/wx.h>
 #include <wx/menu.h>
 #include <wx/textctrl.h>
+#include <wx/wfstream.h>
 #include <wx/utils.h>
 #include <wx/filedlg.h>
 #include <wx/msgdlg.h>
