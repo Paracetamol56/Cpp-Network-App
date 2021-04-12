@@ -115,7 +115,13 @@ void CMain::OnAbout(wxCommandEvent& WXUNUSED(event))
 
 void CMain::OnButtonSend(wxCommandEvent& event)
 {
+	// Network part
+
+	// ==== THINGS TO DO HERE ==== //
+
+	// UI part
 	m_inputText = m_textCtrlBox->GetValue();
+
 	if (m_inputText.empty())
 	{
 		wxMessageDialog WarnEmptyDialog(nullptr, "You should enter a message", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
@@ -143,6 +149,7 @@ void CMain::OnButtonAddfile(wxCommandEvent& event)
 	if (!input_stream.IsOk())
 	{
 		wxLogError("Cannot open file '%s'.", openFileDialog.GetPath());
+		wxMessageDialog WarnEmptyDialog(nullptr, "Cannot open file '%s'.", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
 		return;
 	}
 	else
