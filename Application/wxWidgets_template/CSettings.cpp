@@ -34,22 +34,22 @@ CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1),
 	wxStaticText* usernameLable = new wxStaticText(panelGlobal, -1, wxT("Username"));
 	
 	// IP inputs
-	wxTextCtrl* ipTextBox1 = new wxTextCtrl(panelGlobal, wxID_ANY, m_IPAdress01Input, wxDefaultPosition, wxSize(30, -1));
-	wxTextCtrl* ipTextBox2 = new wxTextCtrl(panelGlobal, wxID_ANY, m_IPAdress02Input, wxDefaultPosition, wxSize(30, -1));
-	wxTextCtrl* ipTextBox3 = new wxTextCtrl(panelGlobal, wxID_ANY, m_IPAdress03Input, wxDefaultPosition, wxSize(30, -1));
-	wxTextCtrl* ipTextBox4 = new wxTextCtrl(panelGlobal, wxID_ANY, m_IPAdress04Input, wxDefaultPosition, wxSize(30, -1));
+	for (size_t i = 0; i < 3; i++)
+	{
+		m_ipTextBox[i] = new wxTextCtrl(panelGlobal, wxID_ANY, "", wxDefaultPosition, wxSize(30, -1));
+	}
 	wxStaticText* ipSemicolon1 = new wxStaticText(panelGlobal, -1, wxT(" : "));
 	wxStaticText* ipSemicolon2 = new wxStaticText(panelGlobal, -1, wxT(" : "));
 	wxStaticText* ipSemicolon3 = new wxStaticText(panelGlobal, -1, wxT(" : "));
 	
 	// Add everything to the sizer
-	ipSizer->Add(ipTextBox1, 1, wxEXPAND);
+	ipSizer->Add(m_ipTextBox[0], 1, wxEXPAND);
 	ipSizer->Add(ipSemicolon1);
-	ipSizer->Add(ipTextBox2, 1, wxEXPAND);
+	ipSizer->Add(m_ipTextBox[1], 1, wxEXPAND);
 	ipSizer->Add(ipSemicolon2);
-	ipSizer->Add(ipTextBox3, 1, wxEXPAND);
+	ipSizer->Add(m_ipTextBox[2], 1, wxEXPAND);
 	ipSizer->Add(ipSemicolon3);
-	ipSizer->Add(ipTextBox4, 1, wxEXPAND);
+	ipSizer->Add(m_ipTextBox[3], 1, wxEXPAND);
 	
 	// Port input
 	wxTextCtrl* portTextBox = new wxTextCtrl(panelGlobal, -1);
@@ -84,12 +84,40 @@ CSettings::~CSettings()
 
 }
 
+
+
 void CSettings::onButtonOk(wxCommandEvent& WXUNUSED(event))
 {
+	for (size_t i = 0; i < 3; i++)
+	{
+		m_IPAdressInput[i] = m_ipTextBox[i]->GetValue();
+	}
 	Close(true);
 }
 
 void CSettings::onButtonCancel(wxCommandEvent& WXUNUSED(event))
 {
 	Close(true);
+}
+
+bool CSettings::isValid()
+{
+	// Checking for errors in IP adress
+	wxString IPAdressToTest[4];
+
+	for (size_t i = 0; i < 3; i++)
+	{
+		IPAdressToTest[i] = m_ipTextBox[i]->GetValue();
+	}
+	
+	for (wxString iIP : IPAdressToTest)
+	{
+		if (iIP.size() > 3)
+		{
+			wxMessageDialog WarnEmptyDialog(nullptr, "The IP Adress is not valid", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+			WarnEmptyDialog.ShowModal();
+			return false;
+		}
+	}
+	return true;
 }

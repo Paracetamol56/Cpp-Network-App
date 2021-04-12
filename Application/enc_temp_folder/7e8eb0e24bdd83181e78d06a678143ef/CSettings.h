@@ -19,6 +19,9 @@ wxDEFINE_EVENT(myID_CANCELBUTTON, wxCommandEvent);
 class CSettings : public wxFrame
 {
 private:
+	// Validity bool
+	bool valid = false;
+
 	// IP adress
 	wxTextCtrl* m_ipTextBox[4];
 	wxString m_IPAdressInput[4];
