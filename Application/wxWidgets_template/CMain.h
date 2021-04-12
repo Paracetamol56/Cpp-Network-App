@@ -13,6 +13,7 @@
 #include "CContent.h"
 #include <wx/wx.h>
 #include <wx/menu.h>
+#include <wx/textctrl.h>
 #include <wx/utils.h>
 #include <wx/filedlg.h>
 #include <wx/msgdlg.h>
@@ -47,6 +48,8 @@ private:
 	// Output sizer
 	wxBoxSizer* m_secondaryOutputSizer;
 	wxBoxSizer* m_secondaryInputSizer;
+	// Text ctrl
+	wxTextCtrl* m_textCtrlBox;
 	// Data from input
 	wxString m_inputText = "";
 	wxString m_inputFilePath = "";

@@ -61,8 +61,8 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	mainSizer->Add(m_panelInput, 0, wxEXPAND | wxRIGHT | wxBOTTOM | wxLEFT, 5);
 	
 	// Text input
-	wxTextCtrl* textCtrlBox = new wxTextCtrl(m_panelInput, wxID_ANY, m_inputText, wxDefaultPosition, wxSize(110, 100), wxTE_MULTILINE);
-	m_secondaryInputSizer->Add(textCtrlBox, 1, wxEXPAND | wxTOP | wxBOTTOM | wxLEFT, 5);
+	m_textCtrlBox = new wxTextCtrl(m_panelInput, wxID_ANY, "", wxDefaultPosition, wxSize(110, 100), wxTE_AUTO_URL | wxTE_MULTILINE);
+	m_secondaryInputSizer->Add(m_textCtrlBox, 1, wxEXPAND | wxTOP | wxBOTTOM | wxLEFT, 5);
 	
 	// Buttons
 	wxButton* buttonSend = new wxButton(m_panelInput, myID_SENDBUTTON, "Send", wxDefaultPosition, wxSize(110, 30), wxTE_MULTILINE);
@@ -78,13 +78,6 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	mainSizer->Layout();
 
 	// ========= END GUI GENERATION ======== //
-
-	// Test content
-	/*m_contentList.push_back(new CContent(m_panelOutput, wxID_ANY, "C'est moi le boss", "Hello world", ""));
-	m_contentList.push_back(new CContent(m_panelOutput, wxID_ANY, "Non, c'est moi", "world Hello\nPutain, le mec qui a fait ca, il est trop malin\nWoaw on ecrit sur trois lignes !\nEt maintenant une ligne super longue pour voir si le retour de ligne marche bien, donc là par exemple, je sais pas trop quoi dire donc je pense que je vais m'arreter", ""));
-	m_contentList.push_back(new CContent(m_panelOutput, wxID_ANY, "C'est moi le boss", "Voila un fichier", "files/image.jpg"));*/
-
-	updateContent();
 }
 
 /// <summary>
@@ -122,10 +115,13 @@ void CMain::OnAbout(wxCommandEvent& WXUNUSED(event))
 
 void CMain::OnButtonSend(wxCommandEvent& event)
 {
+	m_inputText = m_textCtrlBox->GetValue();
 	if (m_inputText.empty())
 	{
 		wxMessageDialog WarnEmptyDialog(nullptr, "You should enter a message", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
 		WarnEmptyDialog.ShowModal();
+		m_inputText.clear();
+		m_textCtrlBox->Clear();
 	}
 	else
 	{
