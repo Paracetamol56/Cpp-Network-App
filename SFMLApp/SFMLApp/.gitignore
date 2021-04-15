@@ -1,4 +1,2 @@
-lib/
-include/
-Release/*
-Debug/*
+!Release
+!Debug
