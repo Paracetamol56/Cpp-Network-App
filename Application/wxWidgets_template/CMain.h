@@ -40,11 +40,11 @@ protected:
 	wxMenu* m_fileMenu;
 	wxMenu* m_helpMenu;
 	// Child frame
-	CSettings* m_settingsFrame;
+	CSettings* m_settings;
 
 private:
 	// Panels
-	wxPanel* m_panelOutput;
+	wxScrolledWindow* m_panelOutput;
 	wxPanel* m_panelInput;
 	// Output sizer
 	wxBoxSizer* m_secondaryOutputSizer;

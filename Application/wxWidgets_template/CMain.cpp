@@ -54,8 +54,11 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30
 	wxBoxSizer* secondaryInputButtonSizer = new wxBoxSizer(wxVERTICAL);
 	
 	// Panels
-	m_panelOutput = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
+	m_panelOutput = new wxScrolledWindow(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
+	m_panelOutput->SetWindowStyle(wxVSCROLL);
 	m_panelOutput->SetScrollbar(wxVERTICAL, 0, 10, 100, true);
+	m_panelOutput->FitInside();
+	m_panelOutput->SetScrollRate(5, 5);
 	m_panelInput = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(100, 100), wxTE_MULTILINE);
 	mainSizer->Add(m_panelOutput, 1, wxEXPAND | wxALL, 5);
 	mainSizer->Add(m_panelInput, 0, wxEXPAND | wxRIGHT | wxBOTTOM | wxLEFT, 5);
@@ -104,8 +107,8 @@ void CMain::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void CMain::OnSettings(wxCommandEvent& WXUNUSED(event))
 {
-	m_settingsFrame = new CSettings;
-	m_settingsFrame->Show();
+	m_settings = new CSettings;
+	m_settings->Show();
 }
 
 void CMain::OnAbout(wxCommandEvent& WXUNUSED(event))
