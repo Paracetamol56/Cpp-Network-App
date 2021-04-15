@@ -40,7 +40,7 @@ protected:
 	wxMenu* m_fileMenu;
 	wxMenu* m_helpMenu;
 	// Child frame
-	CSettings* m_settings;
+	CSettings* m_settings = new CSettings();
 
 private:
 	// Panels

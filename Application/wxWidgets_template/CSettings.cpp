@@ -34,28 +34,25 @@ CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1),
 	wxStaticText* usernameLable = new wxStaticText(panelGlobal, -1, wxT("Username"));
 	
 	// IP inputs
-	for (size_t i = 0; i < 3; i++)
+	for (size_t i = 0; i < 4; i++)
 	{
 		m_ipTextBox[i] = new wxTextCtrl(panelGlobal, wxID_ANY, "", wxDefaultPosition, wxSize(30, -1));
 	}
-	wxStaticText* ipSemicolon1 = new wxStaticText(panelGlobal, -1, wxT(" : "));
-	wxStaticText* ipSemicolon2 = new wxStaticText(panelGlobal, -1, wxT(" : "));
-	wxStaticText* ipSemicolon3 = new wxStaticText(panelGlobal, -1, wxT(" : "));
 	
 	// Add everything to the sizer
 	ipSizer->Add(m_ipTextBox[0], 1, wxEXPAND);
-	ipSizer->Add(ipSemicolon1);
+	ipSizer->Add(new wxStaticText(panelGlobal, -1, wxT(" : ")));
 	ipSizer->Add(m_ipTextBox[1], 1, wxEXPAND);
-	ipSizer->Add(ipSemicolon2);
+	ipSizer->Add(new wxStaticText(panelGlobal, -1, wxT(" : ")));
 	ipSizer->Add(m_ipTextBox[2], 1, wxEXPAND);
-	ipSizer->Add(ipSemicolon3);
+	ipSizer->Add(new wxStaticText(panelGlobal, -1, wxT(" : ")));
 	ipSizer->Add(m_ipTextBox[3], 1, wxEXPAND);
 	
 	// Port input
-	wxTextCtrl* portTextBox = new wxTextCtrl(panelGlobal, -1);
+	m_portTextBox = new wxTextCtrl(panelGlobal, -1);
 	
 	// Username input
-	wxTextCtrl* usernameTextBox = new wxTextCtrl(panelGlobal, -1, wxT(""), wxPoint(-1, -1), wxSize(-1, -1));
+	m_usernameTextBox = new wxTextCtrl(panelGlobal, -1, wxT(""), wxPoint(-1, -1), wxSize(200, -1));
 	
 	// Buttons
 	wxButton* buttonOk = new wxButton(panelGlobal, myID_OKBUTTON, "OK", wxDefaultPosition, wxSize(110, 30));
@@ -67,14 +64,14 @@ CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1),
 	flexSizer->Add(ipLabel);
 	flexSizer->Add(ipSizer, 1, wxEXPAND);
 	flexSizer->Add(portLabel);
-	flexSizer->Add(portTextBox, 1, wxEXPAND);
+	flexSizer->Add(m_portTextBox, 1, wxEXPAND);
 	flexSizer->Add(usernameLable);
-	flexSizer->Add(usernameTextBox, 1, wxEXPAND);
+	flexSizer->Add(m_usernameTextBox, 1, wxEXPAND);
 	mainSizer->Add(flexSizer, 1, wxEXPAND | wxALL, 10);
 	mainSizer->Add(buttonSizer, 1, wxEXPAND);
-
-	panelGlobal->SetSizer(mainSizer);
+	
 	mainSizer->Layout();
+	panelGlobal->SetSizer(mainSizer);
 
 	// ======== END GUI GENERATION ======== //
 }
@@ -88,36 +85,64 @@ CSettings::~CSettings()
 
 void CSettings::onButtonOk(wxCommandEvent& WXUNUSED(event))
 {
-	for (size_t i = 0; i < 3; i++)
+	if (isValid())
 	{
-		m_IPAdressInput[i] = m_ipTextBox[i]->GetValue();
+		this->Hide();
 	}
-	Close(true);
+	// Else : nothing
 }
 
 void CSettings::onButtonCancel(wxCommandEvent& WXUNUSED(event))
 {
-	Close(true);
+	this->Hide();
 }
 
 bool CSettings::isValid()
 {
 	// Checking for errors in IP adress
-	wxString IPAdressToTest[4];
-
-	for (size_t i = 0; i < 3; i++)
+	for (size_t i = 0; i < 4; i++)
 	{
-		IPAdressToTest[i] = m_ipTextBox[i]->GetValue();
-	}
-	
-	for (wxString iIP : IPAdressToTest)
-	{
-		if (iIP.size() > 3)
+		if (m_ipTextBox[i]->GetValue().empty() == true)
 		{
-			wxMessageDialog WarnEmptyDialog(nullptr, "The IP Adress is not valid", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+			wxMessageDialog WarnEmptyDialog(nullptr, "The IP Adress is not complete", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+			WarnEmptyDialog.ShowModal();
+			return false;
+		}
+
+		if (m_ipTextBox[i]->GetValue().IsNumber() == false)
+		{
+			wxMessageDialog WarnEmptyDialog(nullptr, "The IP Adress is not a integer", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
 			WarnEmptyDialog.ShowModal();
 			return false;
 		}
 	}
+
+	for (size_t i = 0; i < 4; i++)
+	{
+		int ipNum = std::stoi(std::string(m_ipTextBox[i]->GetValue()));
+		if (ipNum > 254 || ipNum < 0)
+		{
+			wxMessageDialog WarnEmptyDialog(nullptr, "The IP Adress should be between 0.0.0.0 and 254.254.254.254", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+			WarnEmptyDialog.ShowModal();
+			return false;
+		}
+	}
+
+	// Checking for errors in port
+	if (m_portTextBox->GetValue().empty() == true)
+	{
+		wxMessageDialog WarnEmptyDialog(nullptr, "The port is empty", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+		WarnEmptyDialog.ShowModal();
+		return false;
+	}
+
+	// Checking for errors in username
+	if (m_usernameTextBox->GetValue().empty() == true)
+	{
+		wxMessageDialog WarnEmptyDialog(nullptr, "The username is empty", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+		WarnEmptyDialog.ShowModal();
+		return false;
+	}
+	
 	return true;
 }

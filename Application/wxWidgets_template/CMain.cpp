@@ -107,7 +107,6 @@ void CMain::OnQuit(wxCommandEvent& WXUNUSED(event))
 
 void CMain::OnSettings(wxCommandEvent& WXUNUSED(event))
 {
-	m_settings = new CSettings;
 	m_settings->Show();
 }
 

@@ -12,6 +12,7 @@
 #include <wx/wx.h>
 #include <wx/msgdlg.h>
 #include <wx/utils.h>
+#include <string>
 
 wxDEFINE_EVENT(myID_OKBUTTON, wxCommandEvent);
 wxDEFINE_EVENT(myID_CANCELBUTTON, wxCommandEvent);
@@ -24,9 +25,11 @@ private:
 	wxString m_IPAdressInput[4];
 	
 	// Port
+	wxTextCtrl* m_portTextBox;
 	wxString m_portInput = "";
 	
 	// Username
+	wxTextCtrl* m_usernameTextBox;
 	wxString m_usernameInput = "";
 
 public:
