@@ -131,7 +131,7 @@ void CMain::OnButtonSend(wxCommandEvent& event)
 	}
 	else
 	{
-		m_contentList.push_back(new CContent(m_panelOutput, wxID_ANY, "C'est moi le boss", m_inputText, m_inputFilePath));
+		m_contentList.push_back(new CContent(m_panelOutput, wxID_ANY, m_settings->getUsername(), m_inputText, m_inputFilePath));
 		updateContent();
 		m_inputText.clear();
 		m_textCtrlBox->Clear();

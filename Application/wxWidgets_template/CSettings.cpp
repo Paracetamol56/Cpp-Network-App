@@ -81,12 +81,39 @@ CSettings::~CSettings()
 
 }
 
+std::string CSettings::getIPAdress()
+{
+	return m_IPAdressInput;
+}
 
+int CSettings::getPort()
+{
+	return m_portInput;
+}
+
+std::string CSettings::getUsername()
+{
+	return m_usernameInput;
+}
 
 void CSettings::onButtonOk(wxCommandEvent& WXUNUSED(event))
 {
 	if (isValid())
 	{
+		// Add the IP adress to the private attribute
+		m_IPAdressInput = "";
+		for (size_t i = 0; i < 3; i++)
+		{
+			m_IPAdressInput += m_ipTextBox[i]->GetValue();
+			m_IPAdressInput += '.';
+		}
+		m_IPAdressInput += m_ipTextBox[3]->GetValue();
+
+		// Add the port adress to the private attribute
+		m_portInput = std::stoi(std::string(m_portTextBox->GetValue()));
+
+		// Add the port adress to the private attribute
+		m_usernameInput = std::string(m_usernameTextBox->GetValue());
 		this->Hide();
 	}
 	// Else : nothing
@@ -132,6 +159,21 @@ bool CSettings::isValid()
 	if (m_portTextBox->GetValue().empty() == true)
 	{
 		wxMessageDialog WarnEmptyDialog(nullptr, "The port is empty", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+		WarnEmptyDialog.ShowModal();
+		return false;
+	}
+
+	if (m_portTextBox->GetValue().IsNumber() == false)
+	{
+		wxMessageDialog WarnEmptyDialog(nullptr, "The port is not a integer", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+		WarnEmptyDialog.ShowModal();
+		return false;
+	}
+
+	int portNum = std::stoi(std::string(m_portTextBox->GetValue()));
+	if (portNum > 49151 || portNum < 0)
+	{
+		wxMessageDialog WarnEmptyDialog(nullptr, "The IP Adress should be between 0.0.0.0 and 254.254.254.254", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
 		WarnEmptyDialog.ShowModal();
 		return false;
 	}

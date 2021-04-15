@@ -22,21 +22,26 @@ class CSettings : public wxFrame
 private:
 	// IP adress
 	wxTextCtrl* m_ipTextBox[4];
-	wxString m_IPAdressInput[4];
+	std::string m_IPAdressInput = "";
 	
 	// Port
 	wxTextCtrl* m_portTextBox;
-	wxString m_portInput = "";
+	int m_portInput = -1;
 	
 	// Username
 	wxTextCtrl* m_usernameTextBox;
-	wxString m_usernameInput = "";
+	std::string m_usernameInput = "";
 
 public:
-	
 	// Public constructor and destructor
 	CSettings();
 	~CSettings();
+
+public:
+	std::string getIPAdress();
+	int getPort();
+	std::string getUsername();
+
 
 private:
 	
