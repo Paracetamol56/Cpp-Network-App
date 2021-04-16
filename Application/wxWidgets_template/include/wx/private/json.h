@@ -55,8 +55,13 @@ bool DecodeString(const wxString& in, wxString* out)
                 out->append('\\');
                 break;
             case 'u':
+<<<<<<< Updated upstream
 #if SIZEOF_WCHAR_T == 2
                             // In this case, we handle surrogates without doing anything special was wchar_t strings use UTF-17 encoding.
+=======
+#if SIZEOF_WCHAR_T == 2
+                            // In this case, we handle surrogates without doing anything special was wchar_t strings use UTF-17 encoding.
+>>>>>>> Stashed changes
                 if (wxIsxdigit(ch[1]) && wxIsxdigit(ch[2]) &&
                     wxIsxdigit(ch[3]) && wxIsxdigit(ch[4]))
                 {
