@@ -13,6 +13,7 @@
 
 
 int main() {
+	void receive(char buffer[], sf::TcpSocket& Socket1, size_t& received);
 	//Déclaration de variables et autre
 	sf::TcpSocket Socket1;
 	Socket1.setBlocking(false);
@@ -31,13 +32,10 @@ int main() {
 
 	std::string content;
 
+	
 
-	//thread receive
-		std::thread receive ([&buffer,&Socket1,&received]() {
-			
-			Socket1.receive(buffer, sizeof(buffer), received);
-			
-		});
+	
+	
 
 	////////////////////////////////////////
 
@@ -65,21 +63,18 @@ int main() {
 
 		Listener.listen(port);
 		Listener.accept(Socket1);
-		memset(buffer, 0, 2000);
-
 		
 
+		//lancement du thread de lecture
+		
+		std::thread listen(receive,std::ref(buffer),std::ref(Socket1),std::ref(received));
+		
 		//boucle envoie
 		while (1 == 1)
 		{
-			
-			std::getline(std::cin, content);
+			std::cin>> content;
 			Socket1.send(content.c_str(), content.length() + 1);
-			receive.join();
-
-			std::cout << buffer << "\n\n";
-			memset(buffer, 0, 2000);
-
+			
 		}
 
 	}
@@ -97,63 +92,53 @@ int main() {
 		std::cin >> name;
 
 		Socket1.connect(ipReceiver, port,TimeOut);
-		memset(buffer, 0, 2000);
-
 		
 
+		
+		//lancement du thread de lecture
+		
+		
+		std::thread listen(receive, std::ref(buffer), std::ref(Socket1), std::ref(received));
 
 		//boucle envoie
 		while (1 == 1)
 		{
-			/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))
-			{
-				std::getline(std::cin, content);
-			}*/
-
-			std::getline(std::cin, content);
+			
+			std::cin>>content;
 			Socket1.send(content.c_str(), content.length() + 1);
-			receive.join();
-
-			std::cout << buffer << "\n\n";
-			memset(buffer, 0, 2000);
-
+			
 		}
 		
 
-		std::cout << buffer<<"\n\n";
+		//std::cout << buffer<<"\n\n";
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-
-
-
-	//Pour le moment ce qu'il y a en dessous on s'en fout
-
-	//Connexion
-
-	//if (Socket1.connect(ipReceiver, port, TimeOut)) {
-	//	Listener.accept(Socket1);
-	//}
-
-
-	//while (Socket1.connect(ipReceiver, port, TimeOut) == sf::TcpSocket::Status::Done) {
-	//	
-	//	Listener.listen(port);
-
-	//	while(!(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Enter))) {
-	//		std::string content;
-	//		std::cin >> content;
-	//		packet.append(content);
-	//		Socket1.send(packet);
-	//	}
-	//}
-	///////////////////////////////////////////////////////
-	
-
-
 	system("PAUSE");
 
+}
+
+
+//thread receive
+//std::thread receive([&buffer, &Socket1, &received]() {
+//
+//	memset(buffer, 0, 2000);
+//	Socket1.receive(buffer, sizeof(buffer), received);
+//	std::cout << *buffer << "\n\n";
+//	memset(buffer, 0, 2000);
+//	});
+
+
+//fonction de lecture
+void receive(char buffer[],sf::TcpSocket& Socket1,size_t& received ) 
+{
+	
+	memset(buffer, 0, 2000);
+	Socket1.receive(buffer, sizeof(buffer), received);
+	std::cout << *buffer << "\n\n";
+	memset(buffer, 0, 2000);
+	
 }
