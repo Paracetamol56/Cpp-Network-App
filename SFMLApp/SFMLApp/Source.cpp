@@ -10,14 +10,14 @@
 #include <SFML/NetWork/Packet.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
-
+sf::TcpListener Listener;
 
 int main() {
-	void receive(char buffer[], sf::TcpSocket& Socket1, size_t& received);
+	void intercepte(char buffer[], sf::TcpSocket& Socket1, size_t& received);
 	//Déclaration de variables et autre
 	sf::TcpSocket Socket1;
 	Socket1.setBlocking(false);
-	sf::TcpListener Listener;
+	
 	Listener.setBlocking(false);
 	
 
@@ -67,13 +67,14 @@ int main() {
 
 		//lancement du thread de lecture
 		
-		std::thread listen(receive,std::ref(buffer),std::ref(Socket1),std::ref(received));
+		std::thread listen(intercepte,std::ref(buffer),std::ref(Socket1),std::ref(received));
 		
 		//boucle envoie
 		while (1 == 1)
 		{
 			std::cin>> content;
-			Socket1.send(content.c_str(), content.length() + 1);
+			Socket1.sf::TcpSocket::send(content.c_str(), content.length() + 1);
+			
 			
 		}
 
@@ -98,15 +99,13 @@ int main() {
 		//lancement du thread de lecture
 		
 		
-		std::thread listen(receive, std::ref(buffer), std::ref(Socket1), std::ref(received));
+		std::thread listen(intercepte, std::ref(buffer), std::ref(Socket1), std::ref(received));
 
 		//boucle envoie
 		while (1 == 1)
 		{
-			
 			std::cin>>content;
-			Socket1.send(content.c_str(), content.length() + 1);
-			
+			Socket1.sf::TcpSocket::send(content.c_str(), content.length() + 1);
 		}
 		
 
@@ -133,12 +132,17 @@ int main() {
 
 
 //fonction de lecture
-void receive(char buffer[],sf::TcpSocket& Socket1,size_t& received ) 
+void intercepte(char buffer[],sf::TcpSocket& Socket1,size_t& received ) 
 {
-	
-	memset(buffer, 0, 2000);
-	Socket1.receive(buffer, sizeof(buffer), received);
-	std::cout << *buffer << "\n\n";
-	memset(buffer, 0, 2000);
-	
+	while (1 == 1) {
+		
+		Socket1.sf::TcpSocket::receive(buffer, sizeof(buffer), received);
+		
+
+		if (buffer != memset(buffer, 0, 2000)) {
+			std::cout << *buffer << "\n\n";
+		}
+
+		memset(buffer, 0, 2000);
+	}
 }
