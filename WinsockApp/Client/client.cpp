@@ -10,7 +10,7 @@
 
 void main()
 {
-	std::cout << "\t\t\t\tBienvenue sur \"T\'Chat\".\n\n";
+	std::cout << "\t\t\t\tBienvenue sur BETTER MSN.\n\n";
 
 	WSADATA wsa;
 	WSAStartup(MAKEWORD(2, 0), &wsa);
