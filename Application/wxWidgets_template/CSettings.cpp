@@ -11,11 +11,12 @@
 
 // Event table
 wxBEGIN_EVENT_TABLE(CSettings, wxFrame)
-EVT_BUTTON(myID_OKBUTTON, CSettings::onButtonOk)
-EVT_BUTTON(myID_CANCELBUTTON, CSettings::onButtonCancel)
+	EVT_RADIOBUTTON(myID_RADIOBUTTON, CSettings::onRadioButton)
+	EVT_BUTTON(myID_OKBUTTON, CSettings::onButtonOk)
+	EVT_BUTTON(myID_CANCELBUTTON, CSettings::onButtonCancel)
 wxEND_EVENT_TABLE()
 
-CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1), wxSize(290, 170), wxDEFAULT_FRAME_STYLE &~(wxRESIZE_BORDER))
+CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1), wxSize(290, 210), wxDEFAULT_FRAME_STYLE &~(wxRESIZE_BORDER))
 {
 	// ========== GUI GENERATION ========== //
 	
@@ -25,14 +26,24 @@ CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1),
 	// Sizer
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	wxFlexGridSizer* flexSizer = new wxFlexGridSizer(3, 2, 5, 30);
+	wxBoxSizer* statusSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* ipSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 	
 	// Static text labels
+	wxStaticText* statusLabel = new wxStaticText(panelGlobal, -1, wxT("Status"));
 	wxStaticText* ipLabel = new wxStaticText(panelGlobal, -1, wxT("Destination IP"));
 	wxStaticText* portLabel = new wxStaticText(panelGlobal, -1, wxT("Port"));
 	wxStaticText* usernameLable = new wxStaticText(panelGlobal, -1, wxT("Username"));
 	
+	// Client/Server inputs
+	m_clientRadioButton = new wxRadioButton(panelGlobal, myID_RADIOBUTTON, wxT("Client"));
+	m_serverRadioButton = new wxRadioButton(panelGlobal, myID_RADIOBUTTON, wxT("Server"));
+
+	// Add everything to the sizer
+	statusSizer->Add(m_clientRadioButton, 1, wxEXPAND);
+	statusSizer->Add(m_serverRadioButton, 1, wxEXPAND);
+
 	// IP inputs
 	for (size_t i = 0; i < 4; i++)
 	{
@@ -61,6 +72,8 @@ CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1),
 	buttonSizer->Add(buttonOk, 1, wxALL, 5);
 
 	// Add everything to the sizer
+	flexSizer->Add(statusLabel, 1, wxEXPAND);
+	flexSizer->Add(statusSizer, 1, wxEXPAND);
 	flexSizer->Add(ipLabel);
 	flexSizer->Add(ipSizer, 1, wxEXPAND);
 	flexSizer->Add(portLabel);
@@ -96,18 +109,43 @@ std::string CSettings::getUsername()
 	return m_usernameInput;
 }
 
+void CSettings::onRadioButton(wxCommandEvent& WXUNUSED(event))
+{
+	if (m_serverRadioButton->GetValue())
+	{
+		for (wxTextCtrl* iIpTextBox : m_ipTextBox)
+		{
+			iIpTextBox->Enable(false);
+		}
+	}
+	else
+	{
+		for (wxTextCtrl* iIpTextBox : m_ipTextBox)
+		{
+			iIpTextBox->Enable(true);
+		}
+	}
+}
+
 void CSettings::onButtonOk(wxCommandEvent& WXUNUSED(event))
 {
 	if (isValid())
 	{
 		// Add the IP adress to the private attribute
-		m_IPAdressInput = "";
-		for (size_t i = 0; i < 3; i++)
+		if (m_clientRadioButton->GetValue())
 		{
-			m_IPAdressInput += m_ipTextBox[i]->GetValue();
-			m_IPAdressInput += '.';
+			m_IPAdressInput = "";
+			for (size_t i = 0; i < 3; i++)
+			{
+				m_IPAdressInput += m_ipTextBox[i]->GetValue();
+				m_IPAdressInput += '.';
+			}
+			m_IPAdressInput += m_ipTextBox[3]->GetValue();
 		}
-		m_IPAdressInput += m_ipTextBox[3]->GetValue();
+		else
+		{
+			m_IPAdressInput = "127.0.0.1";
+		}
 
 		// Add the port adress to the private attribute
 		m_portInput = std::stoi(std::string(m_portTextBox->GetValue()));
@@ -127,20 +165,23 @@ void CSettings::onButtonCancel(wxCommandEvent& WXUNUSED(event))
 bool CSettings::isValid()
 {
 	// Checking for errors in IP adress
-	for (size_t i = 0; i < 4; i++)
+	if (m_clientRadioButton->GetValue())
 	{
-		if (m_ipTextBox[i]->GetValue().empty() == true)
+		for (size_t i = 0; i < 4; i++)
 		{
-			wxMessageDialog WarnEmptyDialog(nullptr, "The IP Adress is not complete", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
-			WarnEmptyDialog.ShowModal();
-			return false;
-		}
+			if (m_ipTextBox[i]->GetValue().empty() == true)
+			{
+				wxMessageDialog WarnEmptyDialog(nullptr, "The IP Adress is not complete", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+				WarnEmptyDialog.ShowModal();
+				return false;
+			}
 
-		if (m_ipTextBox[i]->GetValue().IsNumber() == false)
-		{
-			wxMessageDialog WarnEmptyDialog(nullptr, "The IP Adress is not a integer", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
-			WarnEmptyDialog.ShowModal();
-			return false;
+			if (m_ipTextBox[i]->GetValue().IsNumber() == false)
+			{
+				wxMessageDialog WarnEmptyDialog(nullptr, "The IP Adress is not a integer", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+				WarnEmptyDialog.ShowModal();
+				return false;
+			}
 		}
 	}
 

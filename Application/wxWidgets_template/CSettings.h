@@ -14,12 +14,18 @@
 #include <wx/utils.h>
 #include <string>
 
+wxDEFINE_EVENT(myID_RADIOBUTTON, wxCommandEvent);
 wxDEFINE_EVENT(myID_OKBUTTON, wxCommandEvent);
 wxDEFINE_EVENT(myID_CANCELBUTTON, wxCommandEvent);
 
 class CSettings : public wxFrame
 {
 private:
+	// Client/Server
+	wxRadioButton* m_clientRadioButton;
+	wxRadioButton* m_serverRadioButton;
+	bool m_isServer = false;
+
 	// IP adress
 	wxTextCtrl* m_ipTextBox[4];
 	std::string m_IPAdressInput = "";
@@ -46,6 +52,7 @@ public:
 private:
 	
 	// UI events
+	void onRadioButton(wxCommandEvent& event);
 	void onButtonOk(wxCommandEvent& event);
 	void onButtonCancel(wxCommandEvent& event);
 
