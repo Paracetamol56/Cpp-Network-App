@@ -20,6 +20,9 @@
 #include <iomanip>
 #include <sstream>
 
+// Memory leaks detection
+#include "wxmemdbg.h"
+
 class CContent : public wxPanel
 {
 public:

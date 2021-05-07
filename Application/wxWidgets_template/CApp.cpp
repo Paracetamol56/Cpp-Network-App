@@ -17,6 +17,34 @@ wxIMPLEMENT_APP(CApp);
 /// </summary>
 CApp::CApp()
 {
+    m_renderLoopOn = true;
+
+    /* todo
+    // IF SERVER SIDE
+    if (m_mainFrame->getSettings()->getStatusIsServer())
+    {
+        // Socket initializing
+        WSAStartup(MAKEWORD(2, 0), &wsa);
+
+        sinserv.sin_family = AF_INET;
+        sinserv.sin_addr.s_addr = INADDR_ANY;
+        sinserv.sin_port = htons(m_mainFrame->getSettings()->getPort());
+
+        // Socket creation
+        server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+        // Socket configuration to listen the port
+        bind(server, (SOCKADDR*)&sinserv, sizeof(sinserv));
+
+        // No queue
+        listen(server, 0);
+    }
+    // IF CLIENT SIDE
+    else
+    {
+        //todo
+    }
+    */
 }
 
 /// <summary>
@@ -33,8 +61,8 @@ CApp::~CApp()
 /// <returns></returns>
 bool CApp::OnInit()
 {
-    m_frame01 = new CMain;
-    m_frame01->Show();
+    m_mainFrame = new CMain;
+    m_mainFrame->Show();
 
     activateIdleLoop(true);
     return true;

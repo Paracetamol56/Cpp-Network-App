@@ -90,6 +90,21 @@ CMain::~CMain()
 {
 }
 
+CSettings* CMain::getSettings()
+{
+	return m_settings;
+}
+
+std::string CMain::getInputText()
+{
+	return std::string(m_inputText);
+}
+
+std::string CMain::getInputContentPath()
+{
+	return std::string(m_inputFilePath);
+}
+
 void CMain::updateContent()
 {
 	m_secondaryOutputSizer->Clear();

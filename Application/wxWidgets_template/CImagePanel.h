@@ -11,6 +11,9 @@
 
 #include <wx/wx.h>
 
+// Memory leaks detection
+#include "wxmemdbg.h"
+
 // >>> CREDIT : wxWidgets Wiki > https://wiki.wxwidgets.org/An_image_panel
 class CImagePanel : public wxPanel
 {

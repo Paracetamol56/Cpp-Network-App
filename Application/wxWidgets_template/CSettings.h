@@ -14,6 +14,9 @@
 #include <wx/utils.h>
 #include <string>
 
+// Memory leaks detection
+#include "wxmemdbg.h"
+
 wxDEFINE_EVENT(myID_RADIOBUTTON, wxCommandEvent);
 wxDEFINE_EVENT(myID_OKBUTTON, wxCommandEvent);
 wxDEFINE_EVENT(myID_CANCELBUTTON, wxCommandEvent);
@@ -44,6 +47,7 @@ public:
 	~CSettings();
 
 public:
+	bool getStatusIsServer();
 	std::string getIPAdress();
 	int getPort();
 	std::string getUsername();

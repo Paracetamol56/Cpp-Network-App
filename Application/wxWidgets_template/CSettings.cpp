@@ -94,6 +94,11 @@ CSettings::~CSettings()
 
 }
 
+bool CSettings::getStatusIsServer()
+{
+	return false;
+}
+
 std::string CSettings::getIPAdress()
 {
 	return m_IPAdressInput;

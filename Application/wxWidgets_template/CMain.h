@@ -18,7 +18,11 @@
 #include <wx/utils.h>
 #include <wx/filedlg.h>
 #include <wx/msgdlg.h>
+#include <string>
 #include <list>
+
+// Memory leaks detection
+#include "wxmemdbg.h"
 
 wxDEFINE_EVENT(myID_SETTINGS, wxCommandEvent);
 wxDEFINE_EVENT(myID_SENDBUTTON, wxCommandEvent);
@@ -58,7 +62,9 @@ private:
 
 public:
 	// Getter for inputs data
-	wxString getInputData();
+	CSettings* getSettings();
+	std::string getInputText();
+	std::string getInputContentPath();
 	// Main update methode
 	void updateContent();
 
