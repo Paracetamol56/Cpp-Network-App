@@ -1,4 +1,5 @@
 #include <iostream>
+#include <ws2tcpip.h>
 #include <stdio.h>
 #include <string>
 #include <thread>
@@ -16,9 +17,10 @@ int main() {
 	void intercepte(char buffer[], sf::TcpSocket& Socket1, size_t& received);
 	//Déclaration de variables et autre
 	sf::TcpSocket Socket1;
-	Socket1.setBlocking(false);
 	
-	Listener.setBlocking(false);
+	Socket1.setBlocking(true);
+
+	Listener.setBlocking(true);
 	
 
 	char ConnectionType;
@@ -32,6 +34,8 @@ int main() {
 
 	std::string content;
 
+
+	bool parole;
 	
 
 	
@@ -64,19 +68,41 @@ int main() {
 		Listener.listen(port);
 		Listener.accept(Socket1);
 		
+		parole = true;
+
+		while (1 == 1) {
+			if (parole == true) {
+				std::cout << name << " : \n";
+				memset(buffer, 0, sizeof(buffer));
+				FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+				std::cin >> content;
+				Socket1.sf::TcpSocket::send(content.c_str(), content.length() + 1);
+				parole = false;
+				
+			}
+			else if (parole == false) 
+			{
+				Socket1.sf::TcpSocket::receive(buffer, sizeof(buffer), received);
+				std::cout << name << " : \n";
+				std::cout << buffer << "\n\n";
+				parole = true;
+			}
+
+		}
+		
 
 		//lancement du thread de lecture
 		
-		std::thread listen(intercepte,std::ref(buffer),std::ref(Socket1),std::ref(received));
-		
-		//boucle envoie
-		while (1 == 1)
-		{
-			std::cin>> content;
-			Socket1.sf::TcpSocket::send(content.c_str(), content.length() + 1);
-			
-			
-		}
+		//std::thread listen(intercepte,std::ref(buffer),std::ref(Socket1),std::ref(received));
+		//
+		////boucle envoie
+		//while (1 == 1)
+		//{
+		//	std::cin>> contentserveur;
+		//	Socket1.sf::TcpSocket::send(contentserveur.c_str(), contentserveur.length() + 1);
+		//	
+		//	
+		//}
 
 	}
 
@@ -94,20 +120,37 @@ int main() {
 
 		Socket1.connect(ipReceiver, port,TimeOut);
 		
-
+		parole = false;
 		
 		//lancement du thread de lecture
 		
-		
-		std::thread listen(intercepte, std::ref(buffer), std::ref(Socket1), std::ref(received));
+		//
+		//std::thread listen(intercepte, std::ref(buffer), std::ref(Socket1), std::ref(received));
 
-		//boucle envoie
-		while (1 == 1)
-		{
-			std::cin>>content;
-			Socket1.sf::TcpSocket::send(content.c_str(), content.length() + 1);
+		////boucle envoie
+		//while (1 == 1)
+		//{
+		//	std::cin>>contentclient;
+		//	Socket1.sf::TcpSocket::send(contentclient.c_str(), contentclient.length() + 1);
+		//}
+
+		while (1 == 1) {
+			if (parole == true) {
+				std::cout << name << " : \n";
+				memset(buffer, 0, sizeof(buffer));
+				FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+				std::getline(std::cin, content);
+				Socket1.sf::TcpSocket::send(content.c_str(), content.length() + 1);
+				parole = false;
+			}
+			else if (parole == false)
+			{
+				Socket1.sf::TcpSocket::receive(buffer, sizeof(buffer), received);
+				std::cout << name << " : \n";
+				std::cout << buffer << "\n\n";
+				parole = true;
+			}
 		}
-		
 
 		//std::cout << buffer<<"\n\n";
 	}
@@ -121,14 +164,7 @@ int main() {
 }
 
 
-//thread receive
-//std::thread receive([&buffer, &Socket1, &received]() {
-//
-//	memset(buffer, 0, 2000);
-//	Socket1.receive(buffer, sizeof(buffer), received);
-//	std::cout << *buffer << "\n\n";
-//	memset(buffer, 0, 2000);
-//	});
+
 
 
 //fonction de lecture
