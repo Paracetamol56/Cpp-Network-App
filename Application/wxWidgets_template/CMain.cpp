@@ -21,7 +21,7 @@ wxEND_EVENT_TABLE()
 /// <summary>
 /// Constructor with PARENT, ID, TITLE
 /// </summary>
-CMain::CMain() : wxFrame(nullptr, wxID_ANY, "WX Window template", wxPoint(30, 30), wxSize(615, 865))
+CMain::CMain() : wxFrame(nullptr, wxID_ANY, "Better MSN", wxPoint(30, 30), wxSize(615, 865))
 {
 	// ======== MENU BAR CREATION ========//
 	

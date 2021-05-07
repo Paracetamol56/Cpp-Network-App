@@ -17,6 +17,10 @@
 /// </summary>
 class CApp : public wxApp
 {
+private:
+
+	bool m_renderLoopOn;
+
 public:
 	
 	// Public constructor and destructor
@@ -32,4 +36,8 @@ public:
 	
 	// Launcher methode
 	virtual bool OnInit();
+	// Idle loop handler
+	void activateIdleLoop(bool on);
+	// Idle loop
+	void OnIdle(wxIdleEvent& evt);
 };

@@ -24,6 +24,7 @@ CApp::CApp()
 /// </summary>
 CApp::~CApp()
 {
+    activateIdleLoop(false);
 }
 
 /// <summary>
@@ -32,8 +33,33 @@ CApp::~CApp()
 /// <returns></returns>
 bool CApp::OnInit()
 {
-	m_frame01 = new CMain;
-	m_frame01->Show();
+    m_frame01 = new CMain;
+    m_frame01->Show();
 
-	return true;
+    activateIdleLoop(true);
+    return true;
+}
+
+
+void CApp::activateIdleLoop(bool on)
+{
+    if (on && !m_renderLoopOn)
+    {
+        Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(CApp::OnIdle));
+        m_renderLoopOn = true;
+    }
+    else if (!on && m_renderLoopOn)
+    {
+        Disconnect(wxEVT_IDLE, wxIdleEventHandler(CApp::OnIdle));
+        m_renderLoopOn = false;
+    }
+}
+
+void CApp::OnIdle(wxIdleEvent& evt)
+{
+    if (m_renderLoopOn)
+    {
+        // THINGS HERE
+        evt.RequestMore(); // render continuously, not only once on idle
+    }
 }
