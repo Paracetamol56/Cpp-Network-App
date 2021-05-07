@@ -1,4 +1,5 @@
 #include <iostream>
+<<<<<<< Updated upstream
 #include <ws2tcpip.h>
 #include <stdio.h>
 #include <string>
@@ -10,9 +11,14 @@
 #include <SFML/NetWork/TcpListener.hpp>
 #include <SFML/NetWork/Packet.hpp>
 #include <SFML/Window/Keyboard.hpp>
+=======
+#include <SFML/Network.hpp>
+>>>>>>> Stashed changes
 
-sf::TcpListener Listener;
+const unsigned short PORT = 9999;
+const std::string IPADDRESS = "127.0.0.1"; //change to suit your needs
 
+<<<<<<< Updated upstream
 int main() {
 	void intercepte(char buffer[], sf::TcpSocket& Socket1, size_t& received);
 	//Déclaration de variables et autre
@@ -22,11 +28,15 @@ int main() {
 
 	Listener.setBlocking(true);
 	
+=======
+std::string msgSend;
+>>>>>>> Stashed changes
 
-	char ConnectionType;
-	char buffer[2000];
-	std::size_t received;
+sf::TcpSocket socket;
+sf::Mutex globalMutex;
+bool quit = false;
 
+<<<<<<< Updated upstream
 	sf::IpAddress ipReceiver;
 	unsigned short port;
 	sf::Time TimeOut= sf::seconds(10);;
@@ -55,16 +65,21 @@ int main() {
 
 	//demande les informations necessaire a la connexion en fonction du role de l'utilisateur
 	if (ConnectionType == 's') //Serveur
+=======
+void DoStuff(void)
+{
+	static std::string oldMsg;
+	while (!quit)
+>>>>>>> Stashed changes
 	{
-		
-		std::cout << "Vous etes le serveur! \n";
-		std::cout << "\nEntrez le port de connexion :";
-		std::cin >> port;
-		std::cout << "\nEntrez votre nom : ";
-		std::cin >> name;
+		sf::Packet packetSend;
+		globalMutex.lock();
+		packetSend << msgSend;
+		globalMutex.unlock();
 
+		socket.send(packetSend);
 
-
+<<<<<<< Updated upstream
 		Listener.listen(port);
 		Listener.accept(Socket1);
 		
@@ -104,8 +119,21 @@ int main() {
 		//	
 		//}
 
-	}
+=======
+		std::string msg;
+		sf::Packet packetReceive;
 
+		socket.receive(packetReceive);
+		if ((packetReceive >> msg) && oldMsg != msg && !msg.empty())
+		{
+			std::cout << msg << std::endl;
+			oldMsg = msg;
+		}
+>>>>>>> Stashed changes
+	}
+}
+
+<<<<<<< Updated upstream
 	else if (ConnectionType == 'c') //Client
 	{
 
@@ -151,34 +179,73 @@ int main() {
 				parole = true;
 			}
 		}
+=======
+void Server(void)
+{
+	sf::TcpListener listener;
+	listener.listen(PORT);
+	listener.accept(socket);
+	std::cout << "New client connected: " << socket.getRemoteAddress() << std::endl;
+}
+>>>>>>> Stashed changes
 
-		//std::cout << buffer<<"\n\n";
+bool Client(void)
+{
+	if (socket.connect(IPADDRESS, PORT) == sf::Socket::Done)
+	{
+		std::cout << "Connected\n";
+		return true;
 	}
+	return false;
+}
 
-	/////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-	system("PAUSE");
-
+void GetInput(void)
+{
+	std::string s;
+	std::cout << "\nEnter \"exit\" to quit or message to send: ";
+	getline(std::cin, s);
+	if (s == "exit")
+		quit = true;
+	globalMutex.lock();
+	msgSend = s;
+	globalMutex.unlock();
 }
 
 
+<<<<<<< Updated upstream
 
-
-
-//fonction de lecture
-void intercepte(char buffer[],sf::TcpSocket& Socket1,size_t& received ) 
+=======
+int main(int argc, char* argv[])
 {
-	while (1 == 1) {
-		
-		Socket1.sf::TcpSocket::receive(buffer, sizeof(buffer), received);
-		
+	sf::Thread* thread = nullptr;
+>>>>>>> Stashed changes
 
-		if (buffer != memset(buffer, 0, 2000)) {
-			std::cout << *buffer << "\n\n";
-		}
+	char who;
+	std::cout << "Do you want to be a server (s) or a client (c) ? ";
+	std::cin >> who;
 
-		memset(buffer, 0, 2000);
+	if (who == 's')
+		Server();
+	else if (who == 'c')
+		Client();
+	else
+	{
+		std::cout << "Unknown option";
+		return 1;
 	}
+
+	thread = new sf::Thread(&DoStuff);
+	thread->launch();
+
+	while (!quit)
+	{
+		GetInput();
+	}
+
+	if (thread)
+	{
+		thread->wait();
+		delete thread;
+	}
+	return 0;
 }
