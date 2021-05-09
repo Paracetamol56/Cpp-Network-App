@@ -95,6 +95,7 @@ CMain::CMain() : wxFrame(nullptr, wxID_ANY, "Better MSN", wxPoint(30, 30), wxSiz
 /// </summary>
 CMain::~CMain()
 {
+	m_settings->Destroy();
 }
 
 CSettings* CMain::getSettings()

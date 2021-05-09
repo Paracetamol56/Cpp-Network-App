@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="CApp.h" />
     <ClInclude Include="CContent.h" />
+    <ClInclude Include="CDataStructure.h" />
     <ClInclude Include="CImagePanel.h" />
     <ClInclude Include="CMain.h" />
     <ClInclude Include="CSettings.h" />
@@ -102,7 +103,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)include; $(ProjectDir)include\msvc</AdditionalIncludeDirectories>
     </ClCompile>

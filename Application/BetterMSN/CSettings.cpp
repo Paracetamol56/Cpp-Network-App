@@ -88,11 +88,13 @@ CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1),
 	panelGlobal->SetSizer(mainSizer);
 
 	// ======== END GUI GENERATION ======== //
+
+	wxTopLevelWindow();
+	EnableCloseButton(false);
 }
 
 CSettings::~CSettings()
 {
-
 }
 
 bool CSettings::getStatusIsServer()
@@ -154,15 +156,15 @@ void CSettings::onButtonOk(wxCommandEvent& WXUNUSED(event))
 		}
 
 		// Add the port adress to the private attribute
-		m_portInput = std::stoi(std::string(m_portTextBox->GetValue()));
+		m_portInput = std::stoi(std::string(m_portTextBox->GetValue()));     
 
 		// Add the port adress to the private attribute
 		m_usernameInput = std::string(m_usernameTextBox->GetValue());
+
+		m_buttonCancel->Enable();
 		this->Hide();
 	}
 	// Else : nothing
-
-	m_buttonCancel->Enable();
 }
 
 void CSettings::onButtonCancel(wxCommandEvent& WXUNUSED(event))

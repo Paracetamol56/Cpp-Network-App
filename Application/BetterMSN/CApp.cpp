@@ -10,6 +10,7 @@
 #include "CApp.h"
 
 // Entry point definition
+wxDECLARE_APP(CApp);
 wxIMPLEMENT_APP(CApp);
 
 /// <summary>
