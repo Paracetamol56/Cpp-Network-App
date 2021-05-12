@@ -13,6 +13,7 @@
 #include <wx/wx.h>
 #include <stdio.h>
 #include "CMain.h"
+#include "CDataStructure.h"
 
 // Memory leaks detection
 #include "wxmemdbg.h"
@@ -29,6 +30,7 @@ class CApp : public wxApp
 private:
 
 	bool m_renderLoopOn;
+	bool m_listen;
 
 public:
 	
@@ -45,15 +47,23 @@ public:
 	
 	// Launcher methode
 	virtual bool OnInit();
+	// Update server/client state
+	void updateState();
 	// Idle loop handler
 	void activateIdleLoop(bool on);
 	// Idle loop
 	void OnIdle(wxIdleEvent& evt);
+	// Sending function
+	void OnSend(wxString username, wxString textMessage);
 
 private:
 	
 	// Network stuff
 	WSADATA wsa;
+
+	int m_sinsize;
+	int err = 0;
+	CDataStructure* m_transfertData;
 
 	// Socket initialisation
 	SOCKET server;

@@ -113,6 +113,12 @@ std::string CMain::getInputContentPath()
 	return std::string(m_inputFilePath);
 }
 
+void CMain::addContent(wxString username, wxString textMessage)
+{
+	m_contentList.push_back(new CContent(m_panelOutput, wxID_ANY, username, textMessage, m_inputFilePath));
+	updateContent();
+}
+
 void CMain::updateContent()
 {
 	m_secondaryOutputSizer->Clear();

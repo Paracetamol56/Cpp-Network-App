@@ -107,6 +107,13 @@ std::string CSettings::getIPAdress()
 	return m_IPAdressInput;
 }
 
+char* CSettings::getIPAdressChar()
+{
+	char* IPAdressChar = new(char[15]);
+	memcpy(&IPAdressChar, m_IPAdressInput.c_str(), 15);
+	return(IPAdressChar);
+}
+
 int CSettings::getPort()
 {
 	return m_portInput;
@@ -163,6 +170,8 @@ void CSettings::onButtonOk(wxCommandEvent& WXUNUSED(event))
 
 		m_buttonCancel->Enable();
 		this->Hide();
+
+		
 	}
 	// Else : nothing
 }
@@ -193,16 +202,16 @@ bool CSettings::isValid()
 				return false;
 			}
 		}
-	}
 
-	for (size_t i = 0; i < 4; i++)
-	{
-		int ipNum = std::stoi(std::string(m_ipTextBox[i]->GetValue()));
-		if (ipNum > 254 || ipNum < 0)
+		for (size_t i = 0; i < 4; i++)
 		{
-			wxMessageDialog WarnEmptyDialog(nullptr, "The IP Adress should be between 0.0.0.0 and 254.254.254.254", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
-			WarnEmptyDialog.ShowModal();
-			return false;
+			int ipNum = std::stoi(std::string(m_ipTextBox[i]->GetValue()));
+			if (ipNum > 254 || ipNum < 0)
+			{
+				wxMessageDialog WarnEmptyDialog(nullptr, "The IP Adress should be between 0.0.0.0 and 254.254.254.254", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+				WarnEmptyDialog.ShowModal();
+				return false;
+			}
 		}
 	}
 

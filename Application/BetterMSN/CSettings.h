@@ -12,6 +12,7 @@
 #include <wx/wx.h>
 #include <wx/msgdlg.h>
 #include <wx/utils.h>
+#include <wx/event.h>
 #include <string>
 
 // Memory leaks detection
@@ -53,6 +54,7 @@ public:
 public:
 	bool getStatusIsServer();
 	std::string getIPAdress();
+	char* getIPAdressChar();
 	int getPort();
 	std::string getUsername();
 

@@ -65,6 +65,8 @@ public:
 	CSettings* getSettings();
 	std::string getInputText();
 	std::string getInputContentPath();
+	// Add a content object
+	void addContent(wxString username, wxString textMessage);
 	// Main update methode
 	void updateContent();
 
