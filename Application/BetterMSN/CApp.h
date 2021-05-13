@@ -31,6 +31,7 @@ private:
 
 	bool m_renderLoopOn;
 	bool m_listen;
+	int m_error = 0;
 
 public:
 	

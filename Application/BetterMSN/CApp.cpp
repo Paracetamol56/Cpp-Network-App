@@ -68,7 +68,7 @@ void CApp::updateState()
         // No queue
         listen(server, 0);
 
-        int err = 0;
+        m_error = 0;
         m_listen = false;
     }
     // IF CLIENT SIDE
@@ -95,7 +95,7 @@ void CApp::updateState()
             exit(0);
         }
 
-        int err = 0;
+        m_error = 0;
         m_listen = true;
     }
 }
