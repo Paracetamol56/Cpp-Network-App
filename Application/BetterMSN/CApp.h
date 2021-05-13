@@ -12,8 +12,10 @@
 #include <ws2tcpip.h>
 #include <wx/wx.h>
 #include <stdio.h>
+
 #include "CMain.h"
 #include "CDataStructure.h"
+#include "CObserver.h"
 
 // Memory leaks detection
 #include "wxmemdbg.h"
@@ -25,7 +27,9 @@
 /// <summary>
 /// Main app class
 /// </summary>
-class CApp : public wxApp
+class CApp
+	: public wxApp
+	, public CObserver
 {
 private:
 
@@ -43,6 +47,9 @@ private:
 	
 	// Private data to store the main frame
 	CMain* m_mainFrame = nullptr;
+
+	// Override the update methode from CObserver
+	void update() override;
 
 public:
 	

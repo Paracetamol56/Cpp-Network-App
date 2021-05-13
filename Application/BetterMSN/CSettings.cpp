@@ -16,7 +16,9 @@ wxBEGIN_EVENT_TABLE(CSettings, wxFrame)
 	EVT_BUTTON(myID_CANCELBUTTON, CSettings::onButtonCancel)
 wxEND_EVENT_TABLE()
 
-CSettings::CSettings() : wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1), wxSize(290, 210), wxDEFAULT_FRAME_STYLE &~(wxRESIZE_BORDER))
+CSettings::CSettings()
+	: wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1), wxSize(290, 210), wxDEFAULT_FRAME_STYLE &~(wxRESIZE_BORDER))
+	, CObervable()
 {
 	// ========== GUI GENERATION ========== //
 	
@@ -109,8 +111,9 @@ std::string CSettings::getIPAdress()
 
 char* CSettings::getIPAdressChar()
 {
-	char* IPAdressChar = new(char[15]);
-	memcpy(&IPAdressChar, m_IPAdressInput.c_str(), 15);
+	char IPAdressChar[15];
+	memcpy(IPAdressChar, m_IPAdressInput.c_str(), 15);
+
 	return(IPAdressChar);
 }
 
@@ -171,7 +174,8 @@ void CSettings::onButtonOk(wxCommandEvent& WXUNUSED(event))
 		m_buttonCancel->Enable();
 		this->Hide();
 
-		
+		// Notify the App
+		notify();
 	}
 	// Else : nothing
 }

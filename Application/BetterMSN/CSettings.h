@@ -9,11 +9,13 @@
 
 #pragma once
 
+#include "CObervable.h"
 #include <wx/wx.h>
 #include <wx/msgdlg.h>
 #include <wx/utils.h>
 #include <wx/event.h>
 #include <string>
+#include <cstring>
 
 // Memory leaks detection
 #include "wxmemdbg.h"
@@ -22,7 +24,9 @@ wxDEFINE_EVENT(myID_RADIOBUTTON, wxCommandEvent);
 wxDEFINE_EVENT(myID_OKBUTTON, wxCommandEvent);
 wxDEFINE_EVENT(myID_CANCELBUTTON, wxCommandEvent);
 
-class CSettings : public wxFrame
+class CSettings
+	: public wxFrame
+	, public CObervable
 {
 private:
 	// Client/Server

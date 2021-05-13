@@ -7,14 +7,10 @@ void CObervable::atach(CObserver* observer)
 
 void CObervable::detach()
 {
-	m_observer->detach();
 	m_observer = nullptr;
 }
 
-CObervable::~CObervable()
+void CObervable::notify()
 {
-	if (m_observer != nullptr)
-	{
-		m_observer->detach();
-	}
+	m_observer->update();
 }

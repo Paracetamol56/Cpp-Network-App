@@ -30,13 +30,25 @@ CApp::~CApp()
 }
 
 /// <summary>
+/// 
+/// </summary>
+void CApp::update()
+{
+    updateState();
+}
+
+/// <summary>
 /// Main launcher methode
 /// </summary>
-/// <returns></returns>
+/// <returns>
+/// Always true
+/// </returns>
 bool CApp::OnInit()
 {
     m_mainFrame = new CMain;
     m_mainFrame->Show();
+
+    m_mainFrame->getSettings()->atach(this);
 
     activateIdleLoop(true);
     return true;

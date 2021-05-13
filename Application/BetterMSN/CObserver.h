@@ -1,17 +1,12 @@
 #pragma once
 
-#include "CObervable.h"
+#ifndef PATTERN_H_OBSERVER
+#define PATTERN_H_OBSERVER
 
 class CObserver
 {
-private:
-	CObervable* m_observable = nullptr;
-
 public:
-	void atach(CObervable* observable);
-	void detach();
-	~CObserver();
-
 	virtual void update() = 0;
 };
 
+#endif // PATTERN_H_OBSERVER
