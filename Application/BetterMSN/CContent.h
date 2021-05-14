@@ -9,6 +9,9 @@
 
 #pragma once
 
+#ifndef CCONTENT_H_INCLUDED
+#define CCONTENT_H_INCLUDED
+
 #include <wx/wx.h>
 #include <wx/image.h>
 #include <wx/filedlg.h>
@@ -43,3 +46,4 @@ protected:
 	CImagePanel* m_imagePanel = nullptr;
 };
 
+#endif CCONTENT_H_INCLUDED

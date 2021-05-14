@@ -11,11 +11,11 @@
 
 // Event table
 wxBEGIN_EVENT_TABLE(CMain, wxFrame)
-EVT_MENU(wxID_EXIT, CMain::OnQuit)
-EVT_MENU(myID_SETTINGS, CMain::OnSettings)
-EVT_MENU(wxID_ABOUT, CMain::OnAbout)
-EVT_BUTTON(myID_SENDBUTTON, CMain::OnButtonSend)
-EVT_BUTTON(myID_FILEBUTTON, CMain::OnButtonAddfile)
+	EVT_MENU(wxID_EXIT, CMain::OnQuit)
+	EVT_MENU(myID_SETTINGS, CMain::OnSettings)
+	EVT_MENU(wxID_ABOUT, CMain::OnAbout)
+	EVT_BUTTON(myID_SENDBUTTON, CMain::OnButtonSend)
+	EVT_BUTTON(myID_FILEBUTTON, CMain::OnButtonAddfile)
 wxEND_EVENT_TABLE()
 
 /// <summary>
@@ -148,7 +148,7 @@ void CMain::OnButtonSend(wxCommandEvent& event)
 {
 	// Network part
 
-	// ==== THINGS TO DO HERE ==== //
+	//wxGetApp().OnSend(m_settings->getUsername(), m_inputText);
 
 	// UI part
 	m_inputText = m_textCtrlBox->GetValue();

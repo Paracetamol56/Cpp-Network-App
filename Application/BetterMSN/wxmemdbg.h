@@ -11,8 +11,8 @@
 
 // This file detects memory leaks
 
-#ifndef _WX_MEMDBG_H_
-#define _WX_MEMDBG_H_
+#ifndef WXMEMDBG_H_INCLUDED
+#define WXMEMDBG_H_INCLUDED
 
 #ifdef _DEBUG
 #include <crtdbg.h>
@@ -25,4 +25,4 @@
 #define new DEBUG_NEW
 #endif 
 
-#endif // _WX_MEMDBG_H_
+#endif // WXMEMDBG_H_INCLUDED

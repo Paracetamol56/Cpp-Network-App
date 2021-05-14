@@ -9,6 +9,9 @@
 
 #pragma once
 
+#ifndef CIMAGEPANEL_H_INCLUDED
+#define CIMAGEPANEL_H_INCLUDED
+
 #include <wx/wx.h>
 
 // Memory leaks detection
@@ -34,3 +37,5 @@ public:
 
     wxDECLARE_EVENT_TABLE();
 };
+
+#endif // CIMAGEPANEL_H_INCLUDED

@@ -9,6 +9,11 @@
 
 #pragma once
 
+#ifndef CMAIN_H_INCLUDED
+#define CMAIN_H_INCLUDED
+
+#include "CApp.h"
+
 #include "CSettings.h"
 #include "CContent.h"
 #include <wx/wx.h>
@@ -82,3 +87,5 @@ private:
 
 	wxDECLARE_EVENT_TABLE();
 };
+
+#endif // CMAIN_H_INCLUDED

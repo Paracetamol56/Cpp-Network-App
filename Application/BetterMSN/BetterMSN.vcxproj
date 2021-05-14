@@ -24,7 +24,7 @@
     <ClInclude Include="CDataStructure.h" />
     <ClInclude Include="CImagePanel.h" />
     <ClInclude Include="CMain.h" />
-    <ClInclude Include="CObervable.h" />
+    <ClInclude Include="CObservable.h" />
     <ClInclude Include="CObserver.h" />
     <ClInclude Include="CSettings.h" />
     <ClInclude Include="wxmemdbg.h" />
@@ -34,7 +34,7 @@
     <ClCompile Include="CContent.cpp" />
     <ClCompile Include="CImagePanel.cpp" />
     <ClCompile Include="CMain.cpp" />
-    <ClCompile Include="CObervable.cpp" />
+    <ClCompile Include="CObservable.cpp" />
     <ClCompile Include="CObserver.cpp" />
     <ClCompile Include="CSettings.cpp" />
   </ItemGroup>

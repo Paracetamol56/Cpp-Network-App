@@ -10,7 +10,6 @@
 #include "CApp.h"
 
 // Entry point definition
-wxDECLARE_APP(CApp);
 wxIMPLEMENT_APP(CApp);
 
 /// <summary>
@@ -143,3 +142,4 @@ void CApp::OnSend(wxString username, wxString textMessage)
     err = send(sock, (char*)&ServerData, sizeof(ServerData), 0);
     m_listen = !m_listen;
 }
+

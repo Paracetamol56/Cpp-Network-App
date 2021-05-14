@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef PATTERN_H_OBSERVER
-#define PATTERN_H_OBSERVER
+#ifndef COBSERVER_H_INCLUDED
+#define COBSERVER_H_INCLUDED
 
 class CObserver
 {
@@ -9,4 +9,4 @@ public:
 	virtual void update() = 0;
 };
 
-#endif // PATTERN_H_OBSERVER
+#endif // COBSERVER_H_INCLUDED

@@ -39,7 +39,7 @@
     <ClInclude Include="CObserver.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="CObervable.h">
+    <ClInclude Include="CObservable.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,7 +62,7 @@
     <ClCompile Include="CObserver.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="CObervable.cpp">
+    <ClCompile Include="CObservable.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

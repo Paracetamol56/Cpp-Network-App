@@ -7,9 +7,13 @@
  * Available on GitHub at https://github.com/Paracetamol56/Cpp-Network-App
  */
 
+#ifndef CSETTINGS_H_INCLUDED
+#define CSETTINGS_H_INCLUDED
+
 #pragma once
 
-#include "CObervable.h"
+#include "CApp.h"
+#include "CObservable.h"
 #include <wx/wx.h>
 #include <wx/msgdlg.h>
 #include <wx/utils.h>
@@ -26,7 +30,7 @@ wxDEFINE_EVENT(myID_CANCELBUTTON, wxCommandEvent);
 
 class CSettings
 	: public wxFrame
-	, public CObervable
+	, public CObservable
 {
 private:
 	// Client/Server
@@ -75,3 +79,5 @@ private:
 
 	wxDECLARE_EVENT_TABLE();
 };
+
+#endif // CSETTINGS_H_INCLUDED

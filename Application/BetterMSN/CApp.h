@@ -9,6 +9,9 @@
 
 #pragma once
 
+#ifndef CAPP_H_INCLUDED
+#define CAPP_H_INCLUDED
+
 #include <ws2tcpip.h>
 #include <wx/wx.h>
 #include <stdio.h>
@@ -75,3 +78,7 @@ private:
 
 	SOCKADDR_IN sin;
 };
+
+wxDECLARE_APP(CApp);
+
+#endif // CAPP_H_INCLUDED

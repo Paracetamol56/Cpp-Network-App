@@ -18,7 +18,7 @@ wxEND_EVENT_TABLE()
 
 CSettings::CSettings()
 	: wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1), wxSize(290, 210), wxDEFAULT_FRAME_STYLE &~(wxRESIZE_BORDER))
-	, CObervable()
+	, CObservable()
 {
 	// ========== GUI GENERATION ========== //
 	

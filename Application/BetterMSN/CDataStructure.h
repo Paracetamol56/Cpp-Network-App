@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef CDATASTRUCTURE_H_INCLUDED
+#define CDATASTRUCTURE_H_INCLUDED
+
 class CDataStructure
 {
 public:
@@ -18,3 +21,5 @@ public:
 		memcpy(&m_message, message.c_str(), 65536);
 	}
 };
+
+#endif // CDATASTRUCTURE_H_INCLUDED
