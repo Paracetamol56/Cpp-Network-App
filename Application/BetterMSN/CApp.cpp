@@ -124,7 +124,7 @@ void CApp::update(Notification notif)
             CDataStructure ServerData(m_mainFrame->getSettings()->getUsername(), m_mainFrame->getInputText());
 
             err = send(sock, (char*)&ServerData, sizeof(ServerData), 0);
-            if (err != NOERROR)
+            if (err >= -1)
             {
                 wxMessageDialog ErrorEmptyDialog(nullptr, "sendind error", "ERROR", wxICON_STOP | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
                 ErrorEmptyDialog.ShowModal();
@@ -150,7 +150,7 @@ void CApp::Listen()
         m_sinsize = sizeof(sin);
         if ((sock = accept(sock, (SOCKADDR*)&sin, &m_sinsize)) != INVALID_SOCKET)
         {
-            if (err == NOERROR)
+            if (err > -1)
             {
                 CDataStructure ClientData;
                 recv(sock, (char*)&ClientData, sizeof(ClientData), 0);
