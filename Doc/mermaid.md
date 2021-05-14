@@ -25,32 +25,49 @@
 			+OnIdle(evt : wxIdleEvent&) void
 			+OnSend(username : wxString, textMessage : wxString) void
 		}
-
+		
 		class CDataStructure {
 			-m_name : char[256]
 			-m_message : char[65536]
-
+			
 			+CDataStructure()
 			+CDataStructure(name : wxString, message : wxString)
 		}
 
 		class CMain {
-			-m_mainMenuBar : wxMenuBar*
-			-m_fileMenu : wxMenu*
-			-m_helpMenu : wxMenu*
+			#m_mainMenuBar : wxMenuBar*
+			#m_fileMenu : wxMenu*
+			#m_helpMenu : wxMenu*
+			#m_settings : CSettings*
+			
+			-m_panelOutput : wxScrolledWindow*
+			-m_panelInput : wxPanel*
+			
 			-secondaryOutputSizer : wxBoxSizer*
+			-secondaryInputSizer : wxBoxSizer*
+			
+			-m_textCtrlBox : wxTextCtrl* 
+			
 			-m_inputText : wxString
 			-m_inputFilePath : wxString
 			-m_contentList : list<CContent*>
 
 			+CMain()
-			+getInputData() wxString
+			+~CMain()
+			
+			+getSettings() : CSettings*
+			+getInputText() : std::string
+			+getInputContentPath() : std::string
+			
+			+addContent(wxString username, wxString textMessage) void
 			+updateContent() void
-			+OnQuit() void
-			+OnSettings() void
-			+OnAbout() void
-			+OnButtonSend() void
-			+OnButtonAddfile() void
+			
+			-OnQuit() void
+			-OnSettings() void
+			-OnAbout() void
+			
+			-OnButtonSend() void
+			-OnButtonAddfile() void
 		}
 
 		class CContent {
@@ -59,7 +76,7 @@
 			-m_textMessage : wxString
 			-m_filePath : wxString
 			-m_imagePanel : CImagePanel*
-
+			
 			+CContent(parent : wxWindow*, id : wxWindowID, username : const wxString, textMessage : const wxString, filePath : const wxString)
 			+~CContent()
 		}
@@ -67,7 +84,7 @@
 		class CImagePanel {
 			-m_image : wxImage
 			-m_resized : wxBitMap
-
+			
 			+CImagePanel(parent : wxPanel*, filePath : wxString, format : wxBitmapType)
 			+CImagePanel(parent : wxFrame*, filePath : wxString, format : wxBitmapType)
 			+paintEvent(evt : wxPaintEvent&) : void
@@ -83,19 +100,19 @@
 			-m_IPAdress04Input : wxString
 			-m_portInput : wxString
 			-m_usernameInput : wxString
-
+			
 			+onButtonOk() void
 			+onButtonCancel() void
 		}
-
+		
 		class CObervable {
 			-m_observer : CObserver*
-
+			
 			+atach(observer : CObserver*) void
 			+detach() void
 			+notify() void
 		}
-
+		
 		class CObserver {
 			+update() virtual void (Abstract)
 		}
@@ -105,9 +122,9 @@
 		CApp *-- CObserver
 		CApp ..> CSettings
 		CApp ..> Winsock2
-		CMain "1" --> "1" CSettings
+		CMain "1" --> "1" CSettings : m_settings
 		CSettings *-- CObervable
-		CObervable "1" --> "1" CObserver : m_observer
+		CObervable --> CObserver
 		CMain "1" --> "0..*" CContent : m_contentList
 		CContent "1" --> "1" CImagePanel : m_imagePanel
 ```
