@@ -101,7 +101,7 @@ CSettings::~CSettings()
 
 bool CSettings::getStatusIsServer()
 {
-	return false;
+	return m_serverRadioButton->GetValue();
 }
 
 std::string CSettings::getIPAdress()
@@ -235,9 +235,9 @@ bool CSettings::isValid()
 	}
 
 	int portNum = std::stoi(std::string(m_portTextBox->GetValue()));
-	if (portNum > 49151 || portNum < 0)
+	if (portNum > 49151 || portNum < 1023)
 	{
-		wxMessageDialog WarnEmptyDialog(nullptr, "The IP Adress should be between 0.0.0.0 and 254.254.254.254", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+		wxMessageDialog WarnEmptyDialog(nullptr, "The port should be between 1024 and 49150", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
 		WarnEmptyDialog.ShowModal();
 		return false;
 	}

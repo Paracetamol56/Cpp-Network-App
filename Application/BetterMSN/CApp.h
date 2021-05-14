@@ -48,6 +48,7 @@ private:
 	// Private data to store the main frame
 	CMain* m_mainFrame = nullptr;
 
+	// Update server/client state
 	// Override the update methode from CObserver
 	void update() override;
 
@@ -55,12 +56,8 @@ public:
 	
 	// Launcher methode
 	virtual bool OnInit();
-	// Update server/client state
-	void updateState();
-	// Idle loop handler
-	void activateIdleLoop(bool on);
-	// Idle loop
-	void OnIdle(wxIdleEvent& evt);
+	// Listening loop
+	void Listen();
 	// Sending function
 	void OnSend(wxString username, wxString textMessage);
 
@@ -74,10 +71,7 @@ private:
 	CDataStructure* m_transfertData;
 
 	// Socket initialisation
-	SOCKET server;
 	SOCKET sock;
 
-	SOCKADDR_IN sinserv;
 	SOCKADDR_IN sin;
-	
 };

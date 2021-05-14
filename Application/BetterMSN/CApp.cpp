@@ -18,7 +18,6 @@ wxIMPLEMENT_APP(CApp);
 /// </summary>
 CApp::CApp()
 {
-    m_renderLoopOn = true;
 }
 
 /// <summary>
@@ -26,36 +25,20 @@ CApp::CApp()
 /// </summary>
 CApp::~CApp()
 {
-    activateIdleLoop(false);
+    closesocket(sock);
+    WSACleanup();
 }
 
 /// <summary>
-/// 
+/// Update the state (server/client) when the Ok button is pressed in settings
 /// </summary>
 void CApp::update()
 {
-    updateState();
-}
+    // Destroying the old socket
 
-/// <summary>
-/// Main launcher methode
-/// </summary>
-/// <returns>
-/// Always true
-/// </returns>
-bool CApp::OnInit()
-{
-    m_mainFrame = new CMain;
-    m_mainFrame->Show();
+    closesocket(sock);
+    WSACleanup();
 
-    m_mainFrame->getSettings()->atach(this);
-
-    activateIdleLoop(true);
-    return true;
-}
-
-void CApp::updateState()
-{
     // Network initialization
 
     // IF SERVER SIDE
@@ -67,18 +50,18 @@ void CApp::updateState()
         // Socket initializing
         WSAStartup(MAKEWORD(2, 0), &wsa);
 
-        sinserv.sin_family = AF_INET;
-        sinserv.sin_addr.s_addr = INADDR_ANY;
-        sinserv.sin_port = htons(m_mainFrame->getSettings()->getPort());
+        sin.sin_family = AF_INET;
+        sin.sin_addr.s_addr = INADDR_ANY;
+        sin.sin_port = htons(m_mainFrame->getSettings()->getPort());
 
         // Socket creation
-        server = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+        sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
         // Socket configuration to listen the port
-        bind(server, (SOCKADDR*)&sinserv, sizeof(sinserv));
+        bind(sock, (SOCKADDR*)&sin, sizeof(sin));
 
         // No queue
-        listen(server, 0);
+        listen(sock, 0);
 
         m_error = 0;
         m_listen = false;
@@ -102,7 +85,7 @@ void CApp::updateState()
         // Socket connection
         if (connect(sock, (SOCKADDR*)&sin, sizeof(sin)))
         {
-            wxMessageDialog ErrorEmptyDialog(nullptr, "Socket connection failed", "ERROR", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+            wxMessageDialog ErrorEmptyDialog(nullptr, "Socket connection failed", "ERROR", wxICON_STOP | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
             ErrorEmptyDialog.ShowModal();
             exit(0);
         }
@@ -112,27 +95,28 @@ void CApp::updateState()
     }
 }
 
-
-void CApp::activateIdleLoop(bool on)
+/// <summary>
+/// Main launcher methode
+/// </summary>
+/// <returns>
+/// Always true
+/// </returns>
+bool CApp::OnInit()
 {
-    if (on && !m_renderLoopOn)
-    {
-        Connect(wxID_ANY, wxEVT_IDLE, wxIdleEventHandler(CApp::OnIdle));
-        m_renderLoopOn = true;
-    }
-    else if (!on && m_renderLoopOn)
-    {
-        Disconnect(wxEVT_IDLE, wxIdleEventHandler(CApp::OnIdle));
-        m_renderLoopOn = false;
-    }
+    m_mainFrame = new CMain;
+    m_mainFrame->Show();
+
+    m_mainFrame->getSettings()->atach(this);
+
+    return true;
 }
 
-void CApp::OnIdle(wxIdleEvent& evt)
+void CApp::Listen()
 {
-    if (m_renderLoopOn)
+    while(m_listen)
     {
         int sinsize = sizeof(sin);
-        if ((sock = accept(server, (SOCKADDR*)&sin, &sinsize)) != INVALID_SOCKET)
+        if ((sock = accept(sock, (SOCKADDR*)&sin, &sinsize)) != INVALID_SOCKET)
         {
             if (err > -1)
             {
@@ -149,8 +133,6 @@ void CApp::OnIdle(wxIdleEvent& evt)
                 closesocket(sock);
             }
         }
-
-        evt.RequestMore(); // render continuously, not only once on idle
     }
 }
 
