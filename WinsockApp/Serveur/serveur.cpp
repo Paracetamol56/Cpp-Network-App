@@ -1,11 +1,15 @@
 ﻿#include <stdio.h>	
+#include <fstream>
 #include <ws2tcpip.h>
 #include <iostream>
 #include "Donnee.h"
 
 #pragma comment(lib,"ws2_32.lib")
 
-#define N 1000
+
+#define BUFFER_SIZE 1024 
+#pragma warning(disable:4996)
+#pragma comment(lib, "WS2_32") 
 
 void main()
 {
@@ -43,6 +47,13 @@ void main()
 	SDonnee MesDonneeServeur;
 	MesDonneeServeur.read = false;
 
+	//envoie de fichier
+	char file_name[1000];
+	int length ;
+	char buffer[BUFFER_SIZE];
+
+
+
 	std::cout << "Votre nom : ";
 	std::cin >> MesDonneeServeur.name;
 
@@ -59,15 +70,42 @@ void main()
 					std::cout << MesDonneeServeur.name << " :\n";
 					memset(MesDonneeServeur.message, 0, sizeof(MesDonneeServeur.message));
 					FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
-			        std::cin.getline(MesDonneeServeur.message,4096);
-					err = send(sock, (char *)&MesDonneeServeur, sizeof(MesDonneeServeur), 0);
-					MesDonneeServeur.read = !MesDonneeServeur.read;
+
+					//envoie du nom du fichier
+					std::cout << "entrez nom du fichier a envoyer :";
+					std::cin >> file_name;
+
+					//ecriture du fichier
+					FILE* fp = fopen(file_name, "rb");
+
+					while ((length = fread(buffer, sizeof(char), BUFFER_SIZE, fp)) > 0)
+					{
+						if (send(sock, buffer, length, 0) < 0)
+						{
+							std::cout << "Send File: %s Failed" << file_name;
+							break;
+						}
+						memset(buffer, 0, BUFFER_SIZE);
+					}
+
+					
+					printf("File: %s Transfer Successful!n", file_name);
+					/*memset(buffer, 0, BUFFER_SIZE);
+					length = fread(buffer, sizeof(char), BUFFER_SIZE, fp);
+					send(sock, buffer, length, 0);*/
+					
+
+			        //std::cin.getline(MesDonneeServeur.message,4096);
+					//err = send(sock, (char *)&MesDonneeServeur, sizeof(MesDonneeServeur), 0);
+					//MesDonneeServeur.read = !MesDonneeServeur.read;
 				}
 				else
 				{
 					SDonnee SesDonneeClient;
+					FILE* fp = fopen(file_name, "rb");
 					recv(sock, (char*)&SesDonneeClient, sizeof(SesDonneeClient), 0);
 					std::cout << SesDonneeClient.name << " : ";
+					
 					std::cout << SesDonneeClient.message<<"\n\n";
 					MesDonneeServeur.read = !MesDonneeServeur.read;
 				}

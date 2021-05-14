@@ -7,6 +7,9 @@
 #pragma warning(disable:4996)
 
 #define N 1000
+#define BUFFER_SIZE 1024 
+#pragma warning(disable:4996)
+#pragma comment(lib, "WS2_32") 
 
 void main()
 {
@@ -44,13 +47,21 @@ void main()
 		exit(0);
 	}
 
-	char buffer[N];
+	char buffer[BUFFER_SIZE];
 	memset(buffer, 0, sizeof(buffer));
 
 	int err = 0;
 	bool read = false;
 	std::cout << "Votre nom : ";
 	std::cin >> MesDonneesClient.name;
+
+	//envoie fichier
+	char file_name[1000]="coucou";
+	int length = 0;
+	
+
+	std::cout << "entrez nom du fichier a recevoir :";
+	std::cin >> file_name;
 
 
 	while (err > -1)
@@ -66,10 +77,32 @@ void main()
 		}
 		else
 		{
-			SDonnee DonneeServeur;
-			recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
-			std::cout << DonneeServeur.name << " : ";
-			std::cout << DonneeServeur.message<<"\n\n";
+			//SDonnee DonneeServeur;
+
+			
+			FILE* fp = fopen(file_name, "wb");
+			
+
+			memset(buffer, 0, BUFFER_SIZE);
+			int length = 0;
+			while ((length = recv(sock, buffer, BUFFER_SIZE, 0)) > 0)
+			{
+				if (fwrite(buffer, sizeof(char), length, fp) < length)
+				{
+					std::cout << "File: Write Failedn" << file_name;
+					break;
+				}
+				memset(buffer, 0, BUFFER_SIZE);
+			}
+
+			std::cout << "Receive File: From Server Successful!n", file_name;
+
+
+
+			//recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
+			//std::cout << DonneeServeur.name << " : ";
+			
+			//std::cout << DonneeServeur.message<<"\n\n";
 			MesDonneesClient.read = !MesDonneesClient.read;
 		}
 	}
