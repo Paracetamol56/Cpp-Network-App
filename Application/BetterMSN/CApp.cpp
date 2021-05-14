@@ -9,6 +9,8 @@
 
 #include "CApp.h"
 
+#pragma comment(lib, "Ws2_32.lib")
+
 // Entry point definition
 wxIMPLEMENT_APP(CApp);
 wxDECLARE_APP(CApp);
@@ -18,6 +20,8 @@ wxDECLARE_APP(CApp);
 /// </summary>
 CApp::CApp()
 {
+    // Socket initializing
+    WSAStartup(MAKEWORD(2, 0), &wsa);
 }
 
 /// <summary>
@@ -54,12 +58,11 @@ void CApp::update(Notification notif)
     switch (notif)
     {
         // CASE : update the state (Client/Server)
-    case Notification_State:
+    case Notification::Notification_State:
     {
         // Destroying the old socket
 
-        closesocket(sock);
-        WSACleanup();
+        // closesocket(sock);
 
         // Network initialization
 
@@ -69,23 +72,25 @@ void CApp::update(Notification notif)
             // Change the main window title
             m_mainFrame->SetTitle("Better MSN - Serveur");
 
-            // Socket initializing
-            WSAStartup(MAKEWORD(2, 0), &wsa);
+            // Socket creation
+            sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
+            // Create the structure describing various Server parameters
             sin.sin_family = AF_INET;
             sin.sin_addr.s_addr = INADDR_ANY;
             sin.sin_port = htons(m_mainFrame->getSettings()->getPort());
 
-            // Socket creation
-            sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-
             // Socket configuration to listen the port
-            bind(sock, (SOCKADDR*)&sin, sizeof(sin));
+            if (bind(sock, (SOCKADDR*)&sin, sizeof(sin)) < 0)
+            {
+                wxMessageDialog ErrorEmptyDialog(nullptr, "Socket bind failed", "ERROR", wxICON_STOP | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+                ErrorEmptyDialog.ShowModal();
+            }
 
             // No queue
             listen(sock, 0);
 
-            m_error = 0;
+   
             m_listen = false;
         }
         // IF CLIENT SIDE
@@ -94,43 +99,45 @@ void CApp::update(Notification notif)
             // Change the main window title
             m_mainFrame->SetTitle("Better MSN - Client");
 
-            // Socket initializing
-            WSAStartup(MAKEWORD(2, 0), &wsa);
+            // Socket creation
+            sock = socket(AF_INET, SOCK_STREAM, 0);
 
+            // Create the structure describing various Server parameters
             sin.sin_family = AF_INET;
             inet_pton(AF_INET, m_mainFrame->getSettings()->getIPAdressChar(), &sin.sin_addr.s_addr);
             sin.sin_port = htons(m_mainFrame->getSettings()->getPort());
 
-            // Socket creation
-            sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-
             // Socket connection
-            if (connect(sock, (SOCKADDR*)&sin, sizeof(sin)))
+            if (connect(sock, (struct sockaddr*)&sin, sizeof(sin)) < 0 )
             {
                 wxMessageDialog ErrorEmptyDialog(nullptr, "Socket connection failed", "ERROR", wxICON_STOP | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
                 ErrorEmptyDialog.ShowModal();
-                exit(0);
             }
 
-            m_error = 0;
             m_listen = true;
+            Listen();
         }
     }
         break;
         // CASE : send a message
-    case Notification_Send:
+    case Notification::Notification_Send:
         if(m_listen == false)
         {
-            CDataStructure ServerData(m_mainFrame->getSettings()->getUsername(), m_mainFrame->getInputText());
-
-            err = send(sock, (char*)&ServerData, sizeof(ServerData), 0);
-            if (err >= -1)
+            if (sock == INVALID_SOCKET)
             {
-                wxMessageDialog ErrorEmptyDialog(nullptr, "sendind error", "ERROR", wxICON_STOP | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+                wxMessageDialog ErrorEmptyDialog(nullptr, "Invalid socket", "ERROR", wxICON_STOP | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
                 ErrorEmptyDialog.ShowModal();
             }
-            m_listen = !m_listen;
-            Listen();
+            else
+            {
+                CDataStructure transfertData(m_mainFrame->getSettings()->getUsername(), m_mainFrame->getInputText());
+
+                if (send(sock, (char*)&transfertData, 1000, 0) < 0)
+                {
+                    wxMessageDialog ErrorEmptyDialog(nullptr, "Send failed", "ERROR", wxICON_WARNING | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+                    ErrorEmptyDialog.ShowModal();
+                }
+            }
         }
         else
         {
@@ -145,24 +152,31 @@ void CApp::update(Notification notif)
 
 void CApp::Listen()
 {
-    while (m_listen)
+    if (m_listen)
     {
-        m_sinsize = sizeof(sin);
-        if ((sock = accept(sock, (SOCKADDR*)&sin, &m_sinsize)) != INVALID_SOCKET)
+        if (m_mainFrame->getSettings()->getStatusIsServer())
         {
-            if (err > -1)
+            SOCKET server;
+            SOCKADDR_IN sinserv;
+
+            m_sinsize = sizeof(sinserv);
+
+            if ((server = accept(sock, (SOCKADDR*)&sinserv, &m_sinsize)) != INVALID_SOCKET)
             {
                 CDataStructure ClientData;
-                recv(sock, (char*)&ClientData, sizeof(ClientData), 0);
+                recv(server, (char*)&ClientData, sizeof(ClientData), 0);
                 m_mainFrame->addContent(ClientData.m_name, ClientData.m_message);
                 m_listen = !m_listen;
             }
-            else
-            {
-                wxMessageDialog ErrorEmptyDialog(nullptr, "Invalid socket", "ERROR", wxICON_STOP | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
-                ErrorEmptyDialog.ShowModal();
-                closesocket(sock);
-            }
+        }
+        else
+        {
+            m_sinsize = sizeof(sin);
+
+            CDataStructure ServerData;
+            recv(sock, (char*)&ServerData, sizeof(ServerData), 0);
+            m_mainFrame->addContent(ServerData.m_name, ServerData.m_message);
+            m_listen = !m_listen;
         }
     }
 }

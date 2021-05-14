@@ -9,7 +9,7 @@
 
 #pragma once
 
-enum Notification {
+enum class Notification {
 	Notification_Null,
 	Notification_State,
 	Notification_Send

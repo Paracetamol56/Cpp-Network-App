@@ -153,7 +153,7 @@ void CMain::OnButtonSend(wxCommandEvent& event)
 	notify(Notification::Notification_Send);
 
 	// UI part
-	if (getInputText().empty())
+	if (m_inputText.empty())
 	{
 		wxMessageDialog WarnEmptyDialog(nullptr, "You should enter a message", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
 		WarnEmptyDialog.ShowModal();

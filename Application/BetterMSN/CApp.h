@@ -36,9 +36,8 @@ class CApp
 {
 private:
 
-	bool m_renderLoopOn;
-	bool m_listen;
-	int m_error = 0;
+	bool m_listen = false;
+	int m_sinsize = 0;
 
 public:
 	
@@ -66,10 +65,6 @@ private:
 	
 	// Network stuff
 	WSADATA wsa;
-
-	int m_sinsize;
-	int err = 0;
-	CDataStructure* m_transfertData;
 
 	// Socket initialisation
 	SOCKET sock;
