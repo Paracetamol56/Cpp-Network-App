@@ -53,7 +53,7 @@ private:
 
 	// Update server/client state
 	// Override the update methode from CObserver
-	void update() override;
+	void update(Notification notif) override;
 
 public:
 	
@@ -61,8 +61,6 @@ public:
 	virtual bool OnInit();
 	// Listening loop
 	void Listen();
-	// Sending function
-	void OnSend(wxString username, wxString textMessage);
 
 private:
 	
@@ -78,7 +76,5 @@ private:
 
 	SOCKADDR_IN sin;
 };
-
-wxDECLARE_APP(CApp);
 
 #endif // CAPP_H_INCLUDED

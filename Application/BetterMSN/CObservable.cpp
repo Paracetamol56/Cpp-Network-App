@@ -10,7 +10,10 @@ void CObservable::detach()
 	m_observer = nullptr;
 }
 
-void CObservable::notify()
+void CObservable::notify(Notification notif)
 {
-	m_observer->update();
+	if(m_observer != nullptr)
+	{
+		m_observer->update(notif);
+	}
 }

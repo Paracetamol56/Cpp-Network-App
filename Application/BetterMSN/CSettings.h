@@ -7,12 +7,11 @@
  * Available on GitHub at https://github.com/Paracetamol56/Cpp-Network-App
  */
 
+#pragma once
+
 #ifndef CSETTINGS_H_INCLUDED
 #define CSETTINGS_H_INCLUDED
 
-#pragma once
-
-#include "CApp.h"
 #include "CObservable.h"
 #include <wx/wx.h>
 #include <wx/msgdlg.h>

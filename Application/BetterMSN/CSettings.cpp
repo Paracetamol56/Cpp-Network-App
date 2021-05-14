@@ -17,7 +17,7 @@ wxBEGIN_EVENT_TABLE(CSettings, wxFrame)
 wxEND_EVENT_TABLE()
 
 CSettings::CSettings()
-	: wxFrame(nullptr, wxID_ANY, "Settings", wxPoint(-1, -1), wxSize(290, 210), wxDEFAULT_FRAME_STYLE &~(wxRESIZE_BORDER))
+	: wxFrame(nullptr, wxID_ANY, "Settings", wxDefaultPosition, wxSize(290, 210), wxDEFAULT_FRAME_STYLE &~(wxRESIZE_BORDER))
 	, CObservable()
 {
 	// ========== GUI GENERATION ========== //
@@ -175,7 +175,7 @@ void CSettings::onButtonOk(wxCommandEvent& WXUNUSED(event))
 		this->Hide();
 
 		// Notify the App
-		notify();
+		notify(Notification::Notification_State);
 	}
 	// Else : nothing
 }

@@ -21,7 +21,9 @@ wxEND_EVENT_TABLE()
 /// <summary>
 /// Constructor with PARENT, ID, TITLE
 /// </summary>
-CMain::CMain() : wxFrame(nullptr, wxID_ANY, "Better MSN", wxPoint(30, 30), wxSize(615, 865))
+CMain::CMain()
+	: wxFrame(nullptr, wxID_ANY, "Better MSN", wxDefaultPosition, wxSize(615, 865))
+	, CObservable()
 {
 	// ======== MENU BAR CREATION ========//
 	
@@ -105,6 +107,7 @@ CSettings* CMain::getSettings()
 
 std::string CMain::getInputText()
 {
+	m_inputText = m_textCtrlBox->GetValue();
 	return std::string(m_inputText);
 }
 
@@ -147,13 +150,10 @@ void CMain::OnAbout(wxCommandEvent& WXUNUSED(event))
 void CMain::OnButtonSend(wxCommandEvent& event)
 {
 	// Network part
-
-	//wxGetApp().OnSend(m_settings->getUsername(), m_inputText);
+	notify(Notification::Notification_Send);
 
 	// UI part
-	m_inputText = m_textCtrlBox->GetValue();
-
-	if (m_inputText.empty())
+	if (getInputText().empty())
 	{
 		wxMessageDialog WarnEmptyDialog(nullptr, "You should enter a message", "WARNING", wxICON_EXCLAMATION | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
 		WarnEmptyDialog.ShowModal();

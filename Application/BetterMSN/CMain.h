@@ -12,10 +12,9 @@
 #ifndef CMAIN_H_INCLUDED
 #define CMAIN_H_INCLUDED
 
-#include "CApp.h"
-
 #include "CSettings.h"
 #include "CContent.h"
+#include "CObservable.h"
 #include <wx/wx.h>
 #include <wx/menu.h>
 #include <wx/textctrl.h>
@@ -36,7 +35,9 @@ wxDEFINE_EVENT(myID_FILEBUTTON, wxCommandEvent);
 /// <summary>
 /// Main frame class
 /// </summary>
-class CMain : public wxFrame
+class CMain
+	: public wxFrame
+	, public CObservable
 {
 public:
 	// Public constructor and destructor
