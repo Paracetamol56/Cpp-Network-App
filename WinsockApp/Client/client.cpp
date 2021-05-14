@@ -51,7 +51,7 @@ void main()
 	memset(buffer, 0, sizeof(buffer));
 
 	int err = 0;
-	bool read = false;
+	bool read = true;
 	std::cout << "Votre nom : ";
 	std::cin >> MesDonneesClient.name;
 
@@ -60,26 +60,42 @@ void main()
 	int length = 0;
 	
 
-	std::cout << "entrez nom du fichier a recevoir :";
-	std::cin >> file_name;
+	
 
 
 	while (err > -1)
 	{
-		if (MesDonneesClient.read == false)
+		if (read == false)
 		{
 			std::cout << MesDonneesClient.name << " :\n";
-			memset(MesDonneesClient.message, 0, sizeof MesDonneesClient.message);
 			FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
-			std::cin.getline(MesDonneesClient.message,4096);
-			err = send(sock, (char*)&MesDonneesClient, sizeof(MesDonneesClient), 0);
-			MesDonneesClient.read = !MesDonneesClient.read;
+			//envoie du nom du fichier
+			std::cout << "entrez nom du fichier a envoyer :";
+			std::cin >> file_name;
+
+			//ecriture du fichier
+			FILE* fp = fopen(file_name, "rb");
+
+			while ((length = fread(buffer, sizeof(char), BUFFER_SIZE, fp)) > 0)
+			{
+				if (send(sock, buffer, length, 0) < 0)
+				{
+					std::cout << "Send File: %s Failed" << file_name;
+					break;
+				}
+				memset(buffer, 0, BUFFER_SIZE);
+			}
+			fclose(fp);
+
+			read = !read;
 		}
 		else
 		{
 			//SDonnee DonneeServeur;
 
-			
+			std::cout << "entrez nom du fichier a recevoir :";
+			std::cin >> file_name;
+
 			FILE* fp = fopen(file_name, "wb");
 			
 
@@ -95,15 +111,15 @@ void main()
 				memset(buffer, 0, BUFFER_SIZE);
 			}
 
-			std::cout << "Receive File: From Server Successful!n", file_name;
+			fclose(fp);
 
-
+			read = !read;
 
 			//recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
 			//std::cout << DonneeServeur.name << " : ";
 			
 			//std::cout << DonneeServeur.message<<"\n\n";
-			MesDonneesClient.read = !MesDonneesClient.read;
+			
 		}
 	}
 	closesocket(sock);

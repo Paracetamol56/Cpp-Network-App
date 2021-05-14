@@ -45,7 +45,7 @@ void main()
 	int sinsize;
 	int err = 0;
 	SDonnee MesDonneeServeur;
-	MesDonneeServeur.read = false;
+	bool read = false;
 
 	//envoie de fichier
 	char file_name[1000];
@@ -65,7 +65,7 @@ void main()
 		{
 			while (err > -1)
 			{
-				if (MesDonneeServeur.read == false)
+				if (read == false)
 				{
 					std::cout << MesDonneeServeur.name << " :\n";
 					memset(MesDonneeServeur.message, 0, sizeof(MesDonneeServeur.message));
@@ -87,9 +87,9 @@ void main()
 						}
 						memset(buffer, 0, BUFFER_SIZE);
 					}
-
+					fclose(fp);
+					read = !read;
 					
-					printf("File: %s Transfer Successful!n", file_name);
 					/*memset(buffer, 0, BUFFER_SIZE);
 					length = fread(buffer, sizeof(char), BUFFER_SIZE, fp);
 					send(sock, buffer, length, 0);*/
@@ -101,13 +101,28 @@ void main()
 				}
 				else
 				{
-					SDonnee SesDonneeClient;
-					FILE* fp = fopen(file_name, "rb");
-					recv(sock, (char*)&SesDonneeClient, sizeof(SesDonneeClient), 0);
-					std::cout << SesDonneeClient.name << " : ";
 					
-					std::cout << SesDonneeClient.message<<"\n\n";
-					MesDonneeServeur.read = !MesDonneeServeur.read;
+					std::cout << "entrez nom du fichier a recevoir :";
+					std::cin >> file_name;
+
+					FILE* fp = fopen(file_name, "wb");
+
+
+					memset(buffer, 0, BUFFER_SIZE);
+					int length = 0;
+					while ((length = recv(sock, buffer, BUFFER_SIZE, 0)) > 0)
+					{
+						if (fwrite(buffer, sizeof(char), length, fp) < length)
+						{
+							std::cout << "File: Write Failedn" << file_name;
+							break;
+						}
+						memset(buffer, 0, BUFFER_SIZE);
+					}
+
+					fclose(fp);
+
+					read = !read;
 				}
 			}
 			closesocket(sock);
