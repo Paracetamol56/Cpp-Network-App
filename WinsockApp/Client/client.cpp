@@ -67,59 +67,87 @@ void main()
 	{
 		if (read == false)
 		{
+			
 			std::cout << MesDonneesClient.name << " :\n";
+			memset(MesDonneesClient.message, 0, sizeof(MesDonneesClient.message));
 			FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
-			//envoie du nom du fichier
-			std::cout << "entrez nom du fichier a envoyer :";
-			std::cin >> file_name;
 
-			//ecriture du fichier
-			FILE* fp = fopen(file_name, "rb");
+			char TypeCom;
+			std::cout << "Entrez 'p' pour envoyer une image et 't' si vous voulez envoyer un texte :";
+			std::cin >> MesDonneesClient.TypeCom;
 
-			while ((length = fread(buffer, sizeof(char), BUFFER_SIZE, fp)) > 0)
-			{
-				if (send(sock, buffer, length, 0) < 0)
+			//envoie d'image
+			if (MesDonneesClient.TypeCom == 'p') {
+				//envoie de la Struct pour que le serveur sache le type d'envoie
+				err = send(sock, (char*)&MesDonneesClient, sizeof(MesDonneesClient), 0);
+				//envoie du nom du fichier
+				std::cout << "entrez nom du fichier a envoyer :";
+				std::cin >> file_name;
+
+				//ecriture du fichier
+				FILE* fp = fopen(file_name, "rb");
+
+				while ((length = fread(buffer, sizeof(char), BUFFER_SIZE, fp)) > 0)
 				{
-					std::cout << "Send File: %s Failed" << file_name;
-					break;
+					if (send(sock, buffer, length, 0) < 0)
+					{
+						std::cout << "Send File:  Failed" << file_name;
+						break;
+					}
+					memset(buffer, 0, BUFFER_SIZE);
 				}
-				memset(buffer, 0, BUFFER_SIZE);
-			}
-			fclose(fp);
+				fclose(fp);
 
-			read = !read;
+				read = !read;
+			}
+			//Envoie de texte
+			if (MesDonneesClient.TypeCom == 't') {
+				memset(buffer, 0, BUFFER_SIZE);
+				std::cin.getline(MesDonneesClient.message, 4096);
+				err = send(sock, (char*)&MesDonneesClient, sizeof(MesDonneesClient), 0);
+				read = !read;
+			}
 		}
 		else
 		{
-			//SDonnee DonneeServeur;
 
-			std::cout << "entrez nom du fichier a recevoir :";
-			std::cin >> file_name;
-
-			FILE* fp = fopen(file_name, "wb");
-			
-
-			memset(buffer, 0, BUFFER_SIZE);
-			int length = 0;
-			while ((length = recv(sock, buffer, BUFFER_SIZE, 0)) > 0)
-			{
-				if (fwrite(buffer, sizeof(char), length, fp) < length)
-				{
-					std::cout << "File: Write Failedn" << file_name;
-					break;
-				}
-				memset(buffer, 0, BUFFER_SIZE);
+			SDonnee DonneeServeur;
+			while (DonneeServeur.TypeCom == NULL) {
+				recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
 			}
 
-			fclose(fp);
+			//reception d'image
+			if (DonneeServeur.TypeCom == 'p') {
+				std::cout << "entrez nom du fichier a recevoir :";
+				std::cin >> file_name;
 
-			read = !read;
+				FILE* fp = fopen(file_name, "wb");
 
-			//recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
-			//std::cout << DonneeServeur.name << " : ";
-			
-			//std::cout << DonneeServeur.message<<"\n\n";
-			
+
+				memset(buffer, 0, BUFFER_SIZE);
+				int length = 0;
+				while ((length = recv(sock, buffer, BUFFER_SIZE, 0)) > 0)
+				{
+					if (fwrite(buffer, sizeof(char), length, fp) < length)
+					{
+						std::cout << "File: Write Failedn" << file_name;
+						break;
+					}
+					memset(buffer, 0, BUFFER_SIZE);
+					std::cout << "pas fini";
+				}
+				std::cout << "j'ai fini";
+				fclose(fp);
+				read = !read;
+			}
+
+			//reception de texte 
+			if (DonneeServeur.TypeCom == 'p') {
+				recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
+				std::cout << DonneeServeur.name << " : ";
+				std::cout << DonneeServeur.message<<"\n\n";
+
+			}
 		}
 	}
 	closesocket(sock);
