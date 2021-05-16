@@ -121,22 +121,54 @@ void CApp::update(Notification notif)
         break;
         // CASE : send a message
     case Notification::Notification_Send:
+        // Writing mode verification
         if(m_listen == false)
         {
-            if (sock == INVALID_SOCKET)
+            // Valid socket verification
+            if (sock != INVALID_SOCKET)
             {
-                wxMessageDialog ErrorEmptyDialog(nullptr, "Invalid socket", "ERROR", wxICON_STOP | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
-                ErrorEmptyDialog.ShowModal();
+                // IF SERVER SIDE
+                if (m_mainFrame->getSettings()->getStatusIsServer())
+                {
+                    SOCKET server;
+                    SOCKADDR_IN sinserv;
+
+                    m_sinsize = sizeof(sinserv);
+
+                    if ((server = accept(sock, (SOCKADDR*)&sinserv, &m_sinsize)) != INVALID_SOCKET)
+                    {
+                        CDataStructure transfertData(m_mainFrame->getSettings()->getUsername(), m_mainFrame->getInputText());
+
+                        if (send(server, (char*)&transfertData, sizeof(transfertData), 0) < 0)
+                        {
+                            wxMessageDialog ErrorEmptyDialog(nullptr, "Send failed", "ERROR", wxICON_WARNING | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+                            ErrorEmptyDialog.ShowModal();
+                        }
+                    }
+                    else
+                    {
+                        wxMessageDialog ErrorEmptyDialog(nullptr, "Socket connection not accepted", "ERROR", wxICON_WARNING | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+                        ErrorEmptyDialog.ShowModal();
+                    }
+
+                    closesocket(server);
+                }
+                // IF CLIENT SIDE
+                else
+                {
+                    CDataStructure transfertData(m_mainFrame->getSettings()->getUsername(), m_mainFrame->getInputText());
+
+                    if (send(sock, (char*)&transfertData, sizeof(transfertData), 0) < 0)
+                    {
+                        wxMessageDialog ErrorEmptyDialog(nullptr, "Send failed", "ERROR", wxICON_WARNING | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+                        ErrorEmptyDialog.ShowModal();
+                    }
+                }
             }
             else
             {
-                CDataStructure transfertData(m_mainFrame->getSettings()->getUsername(), m_mainFrame->getInputText());
-
-                if (send(sock, (char*)&transfertData, 1000, 0) < 0)
-                {
-                    wxMessageDialog ErrorEmptyDialog(nullptr, "Send failed", "ERROR", wxICON_WARNING | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
-                    ErrorEmptyDialog.ShowModal();
-                }
+                wxMessageDialog ErrorEmptyDialog(nullptr, "Invalid socket", "ERROR", wxICON_STOP | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
+                ErrorEmptyDialog.ShowModal();
             }
         }
         else

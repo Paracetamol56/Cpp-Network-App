@@ -15,6 +15,7 @@
 #include <ws2tcpip.h>
 #include <wx/wx.h>
 #include <stdio.h>
+#include <thread>
 
 #include "CMain.h"
 #include "CDataStructure.h"
