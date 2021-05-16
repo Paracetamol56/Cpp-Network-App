@@ -67,9 +67,10 @@ private:
 	// Network stuff
 	WSADATA wsa;
 
-	// Socket initialisation
+	// Main socket
 	SOCKET sock;
 
+	// Socket informations
 	SOCKADDR_IN sin;
 };
 

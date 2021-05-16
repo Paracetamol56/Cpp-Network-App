@@ -60,12 +60,6 @@ void CApp::update(Notification notif)
         // CASE : update the state (Client/Server)
     case Notification::Notification_State:
     {
-        // Destroying the old socket
-
-        // closesocket(sock);
-
-        // Network initialization
-
         // IF SERVER SIDE
         if (m_mainFrame->getSettings()->getStatusIsServer())
         {
@@ -83,6 +77,7 @@ void CApp::update(Notification notif)
             // Socket configuration to listen the port
             if (bind(sock, (SOCKADDR*)&sin, sizeof(sin)) < 0)
             {
+                // If an error occure when binding the socket : display a ERROR message dialog
                 wxMessageDialog ErrorEmptyDialog(nullptr, "Socket bind failed", "ERROR", wxICON_STOP | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
                 ErrorEmptyDialog.ShowModal();
             }
@@ -90,7 +85,7 @@ void CApp::update(Notification notif)
             // No queue
             listen(sock, 0);
 
-   
+            // Initialize the listening mode to WRITE
             m_listen = false;
         }
         // IF CLIENT SIDE
@@ -114,7 +109,10 @@ void CApp::update(Notification notif)
                 ErrorEmptyDialog.ShowModal();
             }
 
+            // Initialize the listening mode to READ
             m_listen = true;
+
+            // Launch the listening methode
             Listen();
         }
     }
@@ -130,49 +128,70 @@ void CApp::update(Notification notif)
                 // IF SERVER SIDE
                 if (m_mainFrame->getSettings()->getStatusIsServer())
                 {
+                    // Temporary socket creation (to accepte the connection)
                     SOCKET server;
                     SOCKADDR_IN sinserv;
 
+                    // Initialize m_sinsize
                     m_sinsize = sizeof(sinserv);
 
+                    // Accepting the connection
                     if ((server = accept(sock, (SOCKADDR*)&sinserv, &m_sinsize)) != INVALID_SOCKET)
                     {
+                        // Data structure creation
+                        // Parameters : username, input text
                         CDataStructure transfertData(m_mainFrame->getSettings()->getUsername(), m_mainFrame->getInputText());
 
+                        // Try sending
                         if (send(server, (char*)&transfertData, sizeof(transfertData), 0) < 0)
                         {
+                            // If an error occure when sending : display a ERROR message dialog
                             wxMessageDialog ErrorEmptyDialog(nullptr, "Send failed", "ERROR", wxICON_WARNING | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
                             ErrorEmptyDialog.ShowModal();
                         }
                     }
                     else
                     {
+                        // If an error occure when accepting the socket : display a ERROR message dialog
                         wxMessageDialog ErrorEmptyDialog(nullptr, "Socket connection not accepted", "ERROR", wxICON_WARNING | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
                         ErrorEmptyDialog.ShowModal();
                     }
 
+                    // Close the temporary socket
                     closesocket(server);
                 }
                 // IF CLIENT SIDE
                 else
                 {
+                    // Data structure creation
+                    // Parameters : username, input text
                     CDataStructure transfertData(m_mainFrame->getSettings()->getUsername(), m_mainFrame->getInputText());
 
+                    // Try sending
                     if (send(sock, (char*)&transfertData, sizeof(transfertData), 0) < 0)
                     {
+                        // If an error occure when sending : display a ERROR message dialog
                         wxMessageDialog ErrorEmptyDialog(nullptr, "Send failed", "ERROR", wxICON_WARNING | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
                         ErrorEmptyDialog.ShowModal();
                     }
                 }
+
+                // Set the application in listening mode
+                m_listen = true;
+
+                // Launch the listening methode
+                //Listen();
             }
             else
             {
+                // If the socket is invalid : display a ERROR message dialog
                 wxMessageDialog ErrorEmptyDialog(nullptr, "Invalid socket", "ERROR", wxICON_STOP | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
                 ErrorEmptyDialog.ShowModal();
             }
         }
         else
         {
+            // If the application is not in writing mode : display a ERROR message dialog
             wxMessageDialog ErrorEmptyDialog(nullptr, "This is not your turn", "ERROR", wxICON_WARNING | wxOK_DEFAULT | wxCENTER, wxDefaultPosition);
             ErrorEmptyDialog.ShowModal();
         }
@@ -182,33 +201,59 @@ void CApp::update(Notification notif)
     }
 }
 
+/// <summary>
+/// Listening for connections and receive messages
+/// </summary>
 void CApp::Listen()
 {
+    // Reading mode verification
     if (m_listen)
     {
+        // IF SERVER SIDE
         if (m_mainFrame->getSettings()->getStatusIsServer())
         {
+            // Temporary socket creation (to accepte the connection)
             SOCKET server;
             SOCKADDR_IN sinserv;
 
+            // Initialize m_sinsize
             m_sinsize = sizeof(sinserv);
 
+            // Accepting the connection
             if ((server = accept(sock, (SOCKADDR*)&sinserv, &m_sinsize)) != INVALID_SOCKET)
             {
+                // Empty data structure creation to recieve new message
                 CDataStructure ClientData;
+
+                // Wait for receiving a message
                 recv(server, (char*)&ClientData, sizeof(ClientData), 0);
+
+                // Add the message to the main frame
                 m_mainFrame->addContent(ClientData.m_name, ClientData.m_message);
-                m_listen = !m_listen;
             }
+
+            // Close the temporary socket
+            closesocket(server);
         }
+        // IF CLIENT SIDE
         else
         {
+            // Initialize m_sinsize
             m_sinsize = sizeof(sin);
 
+            // Empty data structure creation to recieve new message
             CDataStructure ServerData;
+
+            // Wait for receiving a message
             recv(sock, (char*)&ServerData, sizeof(ServerData), 0);
+
+            // Add the message to the main frame
             m_mainFrame->addContent(ServerData.m_name, ServerData.m_message);
-            m_listen = !m_listen;
         }
+
+
+        // Set the application in listening mode
+        m_listen = false;
     }
+    // ELSE : nothing
 }
