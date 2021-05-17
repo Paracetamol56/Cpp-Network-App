@@ -102,7 +102,10 @@ void main()
 			}
 			//Envoie de texte
 			if (MesDonneesClient.TypeCom == 't') {
+				std::cout << MesDonneesClient.name<<" :\n";
 				memset(buffer, 0, BUFFER_SIZE);
+				FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+				std::cin.ignore();
 				std::cin.getline(MesDonneesClient.message, 4096);
 				err = send(sock, (char*)&MesDonneesClient, sizeof(MesDonneesClient), 0);
 				read = !read;
@@ -114,6 +117,7 @@ void main()
 			SDonnee DonneeServeur;
 			while (DonneeServeur.TypeCom == NULL) {
 				recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
+				
 			}
 
 			//reception d'image
@@ -142,11 +146,13 @@ void main()
 			}
 
 			//reception de texte 
-			if (DonneeServeur.TypeCom == 'p') {
-				recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
+			if (DonneeServeur.TypeCom == 't') {
+				if (DonneeServeur.message == "") {
+					recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
+				}
 				std::cout << DonneeServeur.name << " : ";
 				std::cout << DonneeServeur.message<<"\n\n";
-
+				read = !read;
 			}
 		}
 	}

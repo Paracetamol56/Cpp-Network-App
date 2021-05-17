@@ -110,6 +110,8 @@ void main()
 
 						std::cout << MesDonneeServeur.name << " :\n";
 						memset(buffer, 0, BUFFER_SIZE);
+						FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+						std::cin.ignore();
 						std::cin.getline(MesDonneeServeur.message, 4096);
 						err = send(sock, (char *)&MesDonneeServeur, sizeof(MesDonneeServeur), 0);
 						read = !read;
@@ -119,8 +121,10 @@ void main()
 				else
 				{
 					SDonnee DonneeClient;
+
 					while (DonneeClient.TypeCom == NULL) {
 						recv(sock, (char*)&DonneeClient, sizeof(DonneeClient), 0);
+						
 					}
 
 					if (DonneeClient.TypeCom == 'p') {
@@ -146,9 +150,12 @@ void main()
 						read = !read;
 					}
 					if (DonneeClient.TypeCom == 't') {
-						recv(sock, (char*)&DonneeClient, sizeof(DonneeClient), 0);
+						if (DonneeClient.message == "") {
+							recv(sock, (char*)&DonneeClient, sizeof(DonneeClient), 0);
+						}
 						std::cout << DonneeClient.name << " : ";
-						std::cout << DonneeClient.message << "\n\n";
+						std::cout << DonneeClient.message << "\n";
+						read = !read;
 					}
 				}
 			}
