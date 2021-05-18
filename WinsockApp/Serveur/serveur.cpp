@@ -55,7 +55,7 @@ void main()
 
 
 
-	std::cout << "Votre nom : ";
+	std::cout << "\nVotre nom : ";
 	std::cin >> MesDonneeServeur.name;
 
 	while (1)
@@ -69,7 +69,6 @@ void main()
 				if (read == false)
 				{
 
-					std::cout << MesDonneeServeur.name << " :\n";
 					memset(MesDonneeServeur.message, 0, sizeof(MesDonneeServeur.message));
 					FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 	
@@ -113,6 +112,7 @@ void main()
 						FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 						std::cin.ignore();
 						std::cin.getline(MesDonneeServeur.message, 4096);
+						std::cout << "\n";
 						err = send(sock, (char *)&MesDonneeServeur, sizeof(MesDonneeServeur), 0);
 						read = !read;
 
@@ -150,11 +150,11 @@ void main()
 						read = !read;
 					}
 					if (DonneeClient.TypeCom == 't') {
-						if (DonneeClient.message == "") {
+						if (DonneeClient.message[0] == '\0') {
 							recv(sock, (char*)&DonneeClient, sizeof(DonneeClient), 0);
 						}
 						std::cout << DonneeClient.name << " : ";
-						std::cout << DonneeClient.message << "\n";
+						std::cout << DonneeClient.message << "\n\n";
 						read = !read;
 					}
 				}

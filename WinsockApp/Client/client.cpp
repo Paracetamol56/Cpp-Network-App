@@ -52,7 +52,7 @@ void main()
 
 	int err = 0;
 	bool read = true;
-	std::cout << "Votre nom : ";
+	std::cout << "\nVotre nom : ";
 	std::cin >> MesDonneesClient.name;
 
 	//envoie fichier
@@ -68,7 +68,7 @@ void main()
 		if (read == false)
 		{
 			
-			std::cout << MesDonneesClient.name << " :\n";
+			
 			memset(MesDonneesClient.message, 0, sizeof(MesDonneesClient.message));
 			FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 
@@ -107,6 +107,7 @@ void main()
 				FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 				std::cin.ignore();
 				std::cin.getline(MesDonneesClient.message, 4096);
+				std::cout << "\n";
 				err = send(sock, (char*)&MesDonneesClient, sizeof(MesDonneesClient), 0);
 				read = !read;
 			}
@@ -138,16 +139,16 @@ void main()
 						break;
 					}
 					memset(buffer, 0, BUFFER_SIZE);
-					std::cout << "pas fini";
+					
 				}
-				std::cout << "j'ai fini";
+				
 				fclose(fp);
 				read = !read;
 			}
 
 			//reception de texte 
 			if (DonneeServeur.TypeCom == 't') {
-				if (DonneeServeur.message == "") {
+				if (DonneeServeur.message[0] == '\0') {
 					recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
 				}
 				std::cout << DonneeServeur.name << " : ";
