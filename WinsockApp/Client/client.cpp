@@ -59,8 +59,12 @@ void main()
 	char file_name[1000]="coucou";
 	int length = 0;
 	
-
-	
+	//Color
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	int classiqueColor = 15;
+	int serveurColor = 55;
+	int clientColor = 95;
+	int infoColor = 8;
 
 
 	while (err > -1)
@@ -68,16 +72,16 @@ void main()
 		if (read == false)
 		{
 			
-			
 			memset(MesDonneesClient.message, 0, sizeof(MesDonneesClient.message));
 			FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 
-			char TypeCom;
-			std::cout << "Entrez 'p' pour envoyer une image et 't' si vous voulez envoyer un texte :";
+			SetConsoleTextAttribute(hConsole, infoColor);
+			std::cout << "Entrez 'f' pour envoyer un fichier et 't' si vous voulez envoyer un texte :";
 			std::cin >> MesDonneesClient.TypeCom;
+			SetConsoleTextAttribute(hConsole, classiqueColor);
 
 			//envoie d'image
-			if (MesDonneesClient.TypeCom == 'p') {
+			if (MesDonneesClient.TypeCom == 'f') {
 				//envoie de la Struct pour que le serveur sache le type d'envoie
 				err = send(sock, (char*)&MesDonneesClient, sizeof(MesDonneesClient), 0);
 				//envoie du nom du fichier
@@ -102,7 +106,10 @@ void main()
 			}
 			//Envoie de texte
 			if (MesDonneesClient.TypeCom == 't') {
+				SetConsoleTextAttribute(hConsole, clientColor);
 				std::cout << MesDonneesClient.name<<" :\n";
+				SetConsoleTextAttribute(hConsole, classiqueColor);
+
 				memset(buffer, 0, BUFFER_SIZE);
 				FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 				std::cin.ignore();
@@ -122,7 +129,7 @@ void main()
 			}
 
 			//reception d'image
-			if (DonneeServeur.TypeCom == 'p') {
+			if (DonneeServeur.TypeCom == 'f') {
 				std::cout << "entrez nom du fichier a recevoir :";
 				std::cin >> file_name;
 
@@ -151,7 +158,9 @@ void main()
 				if (DonneeServeur.message[0] == '\0') {
 					recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
 				}
-				std::cout << DonneeServeur.name << " : ";
+				SetConsoleTextAttribute(hConsole, serveurColor);
+				std::cout << DonneeServeur.name << " :";
+				SetConsoleTextAttribute(hConsole, classiqueColor);
 				std::cout << DonneeServeur.message<<"\n\n";
 				read = !read;
 			}
