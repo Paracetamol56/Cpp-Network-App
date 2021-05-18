@@ -113,7 +113,8 @@ void CApp::update(Notification notif)
             m_listen = true;
 
             // Launch the listening methode
-            Listen();
+            std::thread m_listeningThread(&CApp::Listen, this);
+            m_listeningThread.detach();
         }
     }
         break;
@@ -180,7 +181,9 @@ void CApp::update(Notification notif)
                 m_listen = true;
 
                 // Launch the listening methode
-                //Listen();
+                std::thread m_listeningThread(&CApp::Listen, this);
+
+                m_listeningThread.detach();
             }
             else
             {
@@ -255,5 +258,4 @@ void CApp::Listen()
         // Set the application in listening mode
         m_listen = false;
     }
-    // ELSE : nothing
 }
