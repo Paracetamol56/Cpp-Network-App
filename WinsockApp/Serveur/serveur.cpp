@@ -3,6 +3,7 @@
 #include <ws2tcpip.h>
 #include <iostream>
 #include "Donnee.h"
+#include <string>
 
 #pragma comment(lib,"ws2_32.lib")
 
@@ -65,6 +66,10 @@ void main()
 	std::cout << "\nVotre nom : ";
 	std::cin >> MesDonneeServeur.name;
 
+	SetConsoleTextAttribute(hConsole, infoColor);
+	std::cout << "Pour garder la parole, inserer un '%' dans votre texte \n\n";
+	SetConsoleTextAttribute(hConsole, classiqueColor);
+
 	while (1)
 	{
 		sinsize = sizeof(sin);
@@ -124,7 +129,10 @@ void main()
 						std::cin.getline(MesDonneeServeur.message, 4096);
 						std::cout << "\n";
 						err = send(sock, (char *)&MesDonneeServeur, sizeof(MesDonneeServeur), 0);
-						read = !read;
+						std::string chaine = MesDonneeServeur.message;
+						if (chaine.find('%') == std::string::npos) {
+							read = !read;
+						}
 
 					}
 				}
@@ -168,7 +176,10 @@ void main()
 						SetConsoleTextAttribute(hConsole, classiqueColor);
 
 						std::cout << DonneeClient.message << "\n\n";
-						read = !read;
+						std::string chaineRecv = DonneeClient.message;
+						if (chaineRecv.find('%') == std::string::npos) {
+							read = !read;
+						}
 					}
 				}
 			}

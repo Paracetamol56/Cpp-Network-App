@@ -2,6 +2,7 @@
 #include<ws2tcpip.h>
 #include <iostream>
 #include "Donnee.h"
+#include <string>
 
 #pragma comment(lib,"ws2_32.lib")
 #pragma warning(disable:4996)
@@ -31,6 +32,8 @@ void main()
 	std::cout << "\nPort : ";
 	std::cin >> port;
 
+	
+
 	sin.sin_family = AF_INET;
 	inet_pton(AF_INET, ip, &sin.sin_addr.s_addr);
 	sin.sin_port = htons(port);
@@ -52,13 +55,12 @@ void main()
 
 	int err = 0;
 	bool read = true;
-	std::cout << "\nVotre nom : ";
-	std::cin >> MesDonneesClient.name;
+
 
 	//envoie fichier
-	char file_name[1000]="coucou";
+	char file_name[1000] = "coucou";
 	int length = 0;
-	
+
 	//Color
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	int classiqueColor = 15;
@@ -66,12 +68,18 @@ void main()
 	int clientColor = 95;
 	int infoColor = 8;
 
+	std::cout << "\nVotre nom : ";
+	std::cin >> MesDonneesClient.name;
+
+	SetConsoleTextAttribute(hConsole, infoColor);
+	std::cout << "Pour garder la parole, inserer un '%' dans votre texte \n\n";
+	SetConsoleTextAttribute(hConsole, classiqueColor);
 
 	while (err > -1)
 	{
 		if (read == false)
 		{
-			
+
 			memset(MesDonneesClient.message, 0, sizeof(MesDonneesClient.message));
 			FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 
@@ -107,7 +115,7 @@ void main()
 			//Envoie de texte
 			if (MesDonneesClient.TypeCom == 't') {
 				SetConsoleTextAttribute(hConsole, clientColor);
-				std::cout << MesDonneesClient.name<<" :\n";
+				std::cout << MesDonneesClient.name << " :\n";
 				SetConsoleTextAttribute(hConsole, classiqueColor);
 
 				memset(buffer, 0, BUFFER_SIZE);
@@ -116,7 +124,10 @@ void main()
 				std::cin.getline(MesDonneesClient.message, 4096);
 				std::cout << "\n";
 				err = send(sock, (char*)&MesDonneesClient, sizeof(MesDonneesClient), 0);
-				read = !read;
+				std::string chaine = MesDonneesClient.message;
+				if (chaine.find('%') == std::string::npos) {
+					read = !read;
+				}
 			}
 		}
 		else
@@ -125,7 +136,7 @@ void main()
 			SDonnee DonneeServeur;
 			while (DonneeServeur.TypeCom == NULL) {
 				recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
-				
+
 			}
 
 			//reception d'image
@@ -146,9 +157,9 @@ void main()
 						break;
 					}
 					memset(buffer, 0, BUFFER_SIZE);
-					
+
 				}
-				
+
 				fclose(fp);
 				read = !read;
 			}
@@ -161,15 +172,19 @@ void main()
 				SetConsoleTextAttribute(hConsole, serveurColor);
 				std::cout << DonneeServeur.name << " :";
 				SetConsoleTextAttribute(hConsole, classiqueColor);
-				std::cout << DonneeServeur.message<<"\n\n";
-				read = !read;
+				std::cout << DonneeServeur.message << "\n\n";
+				std::string chaineRecv = DonneeServeur.message;
+				if (chaineRecv.find('%') == std::string::npos) {
+					read = !read;
+				}
 			}
 		}
 	}
-	closesocket(sock);
+		closesocket(sock);
 
-	std::cout << "Connection termin�e\n\n";
+		std::cout << "Connection termin�e\n\n";
 
-	WSACleanup();
+		WSACleanup();
 
+	
 }
