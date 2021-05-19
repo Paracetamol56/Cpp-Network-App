@@ -77,24 +77,29 @@ void main()
 
 	while (err > -1)
 	{
-		if (read == false)
+		if (read == false) //mode d'envoie
 		{
 
 			memset(MesDonneesClient.message, 0, sizeof(MesDonneesClient.message));
 			FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 
+			//définition du type d'envoie 
 			SetConsoleTextAttribute(hConsole, infoColor);
 			std::cout << "Entrez 'f' pour envoyer un fichier et 't' si vous voulez envoyer un texte :";
 			std::cin >> MesDonneesClient.TypeCom;
 			SetConsoleTextAttribute(hConsole, classiqueColor);
 
+			//envoie de la Struct pour que le serveur sache le type d'envoie
+			err = send(sock, (char*)&MesDonneesClient, sizeof(MesDonneesClient), 0);
+
 			//envoie d'image
 			if (MesDonneesClient.TypeCom == 'f') {
-				//envoie de la Struct pour que le serveur sache le type d'envoie
-				err = send(sock, (char*)&MesDonneesClient, sizeof(MesDonneesClient), 0);
+				
 				//envoie du nom du fichier
 				std::cout << "entrez nom du fichier a envoyer :";
 				std::cin >> file_name;
+				err = send(sock, file_name, sizeof(file_name), 0);
+
 
 				//ecriture du fichier
 				FILE* fp = fopen(file_name, "rb");
@@ -109,31 +114,51 @@ void main()
 					memset(buffer, 0, BUFFER_SIZE);
 				}
 				fclose(fp);
+				//Garder la parole ou pas
+				/*char KeepTalking = NULL;
+				SetConsoleTextAttribute(hConsole, infoColor);
+				std::cout << "Voulez-vous garder la parole (y/n) :";
+				std::cin >> KeepTalking;
+				SetConsoleTextAttribute(hConsole, classiqueColor);
 
+				send(sock, (char*)KeepTalking, sizeof(KeepTalking), 0);
+				if (KeepTalking == 'n') 
+				{
+					
+				}
+				*/
 				read = !read;
+				
 			}
 			//Envoie de texte
 			if (MesDonneesClient.TypeCom == 't') {
+				//affichage du nom de l'utilisateurs
 				SetConsoleTextAttribute(hConsole, clientColor);
 				std::cout << MesDonneesClient.name << " :\n";
 				SetConsoleTextAttribute(hConsole, classiqueColor);
 
+				//input du message
 				memset(buffer, 0, BUFFER_SIZE);
 				FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 				std::cin.ignore();
 				std::cin.getline(MesDonneesClient.message, 4096);
 				std::cout << "\n";
+
+				//envoie du message
 				err = send(sock, (char*)&MesDonneesClient, sizeof(MesDonneesClient), 0);
+
+				//echange de parole ou pas
 				std::string chaine = MesDonneesClient.message;
 				if (chaine.find('%') == std::string::npos) {
 					read = !read;
 				}
 			}
 		}
-		else
+		else //mode réception
 		{
 
 			SDonnee DonneeServeur;
+			//attente du type d'envoie 
 			while (DonneeServeur.TypeCom == NULL) {
 				recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
 
@@ -141,16 +166,19 @@ void main()
 
 			//reception d'image
 			if (DonneeServeur.TypeCom == 'f') {
-				std::cout << "entrez nom du fichier a recevoir :";
-				std::cin >> file_name;
+				//reception du nom du fichier
+				recv(sock, file_name, sizeof(file_name), 0);
 
 				FILE* fp = fopen(file_name, "wb");
 
 
 				memset(buffer, 0, BUFFER_SIZE);
-				int length = 0;
-				while ((length = recv(sock, buffer, BUFFER_SIZE, 0)) > 0)
+				int length = 1;
+				
+				//boucle de reception du fichier
+				while (length >0)
 				{
+					length = recv(sock, buffer, BUFFER_SIZE, 0);
 					if (fwrite(buffer, sizeof(char), length, fp) < length)
 					{
 						std::cout << "File: Write Failedn" << file_name;
@@ -158,25 +186,60 @@ void main()
 					}
 					memset(buffer, 0, BUFFER_SIZE);
 
-				}
+					//vérifie si la taille de ce qui est reçu est égale a la taille max si c'est faux alors c'est le dernier buffer du fichier
+					if (length < BUFFER_SIZE) {
+						length = 0;
+						SetConsoleTextAttribute(hConsole, infoColor);
+						std::cout << "fichier : " << file_name << " recu \n";
+						SetConsoleTextAttribute(hConsole, classiqueColor);
+					}
 
+				}
 				fclose(fp);
+
+				/*char ServeurKeepTalking = NULL;
+
+				while (ServeurKeepTalking == NULL) {
+					recv(sock, (char*)ServeurKeepTalking, sizeof(ServeurKeepTalking), 0);
+				}*/
+
+				/*if (ServeurKeepTalking == 'n')
+				{
+					read = !read;
+				}
+				else 
+				{
+					SetConsoleTextAttribute(hConsole, infoColor);
+					std::cout << DonneeServeur.name << " garde la parole. \n";
+					SetConsoleTextAttribute(hConsole, classiqueColor);
+				}
+				char ClientKeepTalking = NULL;*/
+
 				read = !read;
 			}
 
 			//reception de texte 
 			if (DonneeServeur.TypeCom == 't') {
+
+				//condition pour ce mettre en attente de texte
 				if (DonneeServeur.message[0] == '\0') {
 					recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
 				}
+
+				//affichage du nom du correspondant
 				SetConsoleTextAttribute(hConsole, serveurColor);
 				std::cout << DonneeServeur.name << " :";
 				SetConsoleTextAttribute(hConsole, classiqueColor);
+
+				//affichage du message envoyé par le correspondant
 				std::cout << DonneeServeur.message << "\n\n";
 				std::string chaineRecv = DonneeServeur.message;
+
+				//cherche dans le buffer le caractère '%' afin de savoir si l'utilisateur veut garder la parole
 				if (chaineRecv.find('%') == std::string::npos) {
 					read = !read;
 				}
+
 			}
 		}
 	}

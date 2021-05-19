@@ -7,4 +7,5 @@ struct SDonnee
 	bool read = true;
 	char message[4096];
 	char TypeCom = NULL;
+	
 };
