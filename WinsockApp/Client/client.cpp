@@ -1,47 +1,61 @@
-﻿#include<stdio.h>	
-#include<ws2tcpip.h>
+﻿/*
+ * Created on Fri May 21 2021
+ *
+ * Copyright (c) 2021 - Mathéo G & Sahel H - All Right Reserved
+ *
+ * Licensed under the Apache License, Version 2.0
+ * Available on GitHub at https://github.com/Paracetamol56/Cpp-Network-App
+ */
+
+#include <stdio.h>	
+#include <fstream>
+#include <ws2tcpip.h>
 #include <iostream>
-#include "Donnee.h"
 #include <string>
+
+#include "Data.h"
 
 #pragma comment(lib,"ws2_32.lib")
 #pragma warning(disable:4996)
 
-#define N 1000
+// #define N 1000
 #define BUFFER_SIZE 1024 
 #pragma warning(disable:4996)
 #pragma comment(lib, "WS2_32") 
 
-void main()
+int main()
 {
 	std::cout << "\t\t\t\tBienvenue sur BETTER MSN.\n\n";
 
-	WSADATA wsa;
-	WSAStartup(MAKEWORD(2, 0), &wsa);
+	// ################## Network objects ################## //
 
-	SOCKET sock;
-	SOCKADDR_IN sin;
+	WSADATA wsa;									// Structure containing information about the Windows Sockets implementation
+	WSAStartup(MAKEWORD(2, 0), &wsa);				// Initiates the use of the Winsock DLL
+
+	SOCKET sock;									// Connection socket
+	SOCKADDR_IN sin;								// Structure containing information about the 'sock' socket
+
+	// ##################################################### //
+
+	// ################# Connection inputs ################# //
+
+	// IP Address
 	char ip[15];
-	int port;
-	SDonnee MesDonneesClient;
-
-	//initialisation et saisi des informations
 	std::cout << "Ip : ";
-	std::cin >> ip;
+	std::cin >> ip;									// Should be between 1.1.1.1 and 254.254.254.254
 
+	int port;
 	std::cout << "\nPort : ";
-	std::cin >> port;
+	std::cin >> port;								// Should be between 1024 and 49150
 
-	
+	sin.sin_family = AF_INET;						// Set the family
+	inet_pton(AF_INET, ip, &sin.sin_addr.s_addr);	// Set thi IP adress
+	sin.sin_port = htons(port);						// Set the port
 
-	sin.sin_family = AF_INET;
-	inet_pton(AF_INET, ip, &sin.sin_addr.s_addr);
-	sin.sin_port = htons(port);
-
-	//creation de la socket
+	// Socket creation
 	sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
-	//connexion a la socket
+	// Socket connection
 	if (connect(sock, (SOCKADDR*)&sin, sizeof(sin)))
 	{
 		std::cout << "La connection a echoue\n";
@@ -50,58 +64,74 @@ void main()
 		exit(0);
 	}
 
-	char buffer[BUFFER_SIZE];
-	memset(buffer, 0, sizeof(buffer));
+	// ##################################################### //
 
-	int err = 0;
-	bool read = true;
+	// ############## Communication variables ############## //
 
+	int err = 0;									// Keep the error code
+	SData ClientData;								// Data structure of a message
+	bool read = true;								// Writing/Reading state (true = listening for client message)
+	char buffer[BUFFER_SIZE];						// Size of file chunk send at a time
 
-	//envoie fichier
-	char file_name[1000] = "coucou";
-	int length = 0;
+	char file_name[1000];							// File path in case of file sendin
+	int length = 0;									// Index of file chunk to send
 
-	//Color
+	// Set the consol mode to color support
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	int classiqueColor = 15;
-	int serveurColor = 55;
-	int clientColor = 95;
-	int infoColor = 8;
+	// Color codes	used							== DEFAULT VALUES ==
+	const int classiqueColor = 15;					// (15) - White
+	const int serveurColor = 55;					// (55) - Blue
+	const int clientColor = 95;						// (95) - Purple
+	const int infoColor = 8;						// (8)  - Gray
+
+	// ##################################################### //
+
+	// ############### Other Information UI ################ //
 
 	std::cout << "\nVotre nom : ";
-	std::cin >> MesDonneesClient.name;
+	std::cin >> ClientData.m_username;
 
 	SetConsoleTextAttribute(hConsole, infoColor);
 	std::cout << "Pour garder la parole, inserer un '%' dans votre texte \n\n";
 	SetConsoleTextAttribute(hConsole, classiqueColor);
 
+	// ##################################################### //
+
+	// ##################### Main loop ##################### //
+
 	while (err > -1)
 	{
-		if (read == false) //mode d'envoie
-		{
 
-			memset(MesDonneesClient.message, 0, sizeof(MesDonneesClient.message));
+		// ################### Sending state ################### //
+
+		if (read == false)
+		{
+			// Empty the old message structure
+			memset(ClientData.m_message, 0, sizeof(ClientData.m_message));
+			// Set the consol to support getline
 			FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 
-			//définition du type d'envoie 
+			// Define the sending kind
 			SetConsoleTextAttribute(hConsole, infoColor);
 			std::cout << "Entrez 'f' pour envoyer un fichier et 't' si vous voulez envoyer un texte :";
-			std::cin >> MesDonneesClient.TypeCom;
+			std::cin >> ClientData.m_type;
 			SetConsoleTextAttribute(hConsole, classiqueColor);
 
-			//envoie de la Struct pour que le serveur sache le type d'envoie
-			err = send(sock, (char*)&MesDonneesClient, sizeof(MesDonneesClient), 0);
+			// Send the message structure to the client (to let it know the sending kind)
+			err = send(sock, (char*)&ClientData, sizeof(ClientData), 0);
 
-			//envoie d'image
-			if (MesDonneesClient.TypeCom == 'f') {
+			// ==== File sending ==== //
+
+			if (ClientData.m_type == 'f')
+			{
 				
-				//envoie du nom du fichier
+				// Send file name (usefull to inform about extention)
 				std::cout << "entrez nom du fichier a envoyer :";
 				std::cin >> file_name;
 				err = send(sock, file_name, sizeof(file_name), 0);
 
 
-				//ecriture du fichier
+				// Send the file
 				FILE* fp = fopen(file_name, "rb");
 
 				while ((length = fread(buffer, sizeof(char), BUFFER_SIZE, fp)) > 0)
@@ -114,68 +144,66 @@ void main()
 					memset(buffer, 0, BUFFER_SIZE);
 				}
 				fclose(fp);
-				//Garder la parole ou pas
-				/*char KeepTalking = NULL;
-				SetConsoleTextAttribute(hConsole, infoColor);
-				std::cout << "Voulez-vous garder la parole (y/n) :";
-				std::cin >> KeepTalking;
-				SetConsoleTextAttribute(hConsole, classiqueColor);
-
-				send(sock, (char*)KeepTalking, sizeof(KeepTalking), 0);
-				if (KeepTalking == 'n') 
-				{
-					
-				}
-				*/
-				read = !read;
 				
+				// Switch the state
+				read = !read;
 			}
-			//Envoie de texte
-			if (MesDonneesClient.TypeCom == 't') {
-				//affichage du nom de l'utilisateurs
+
+			// ==== Text Sending ==== //
+
+			if (ClientData.m_type == 't')
+			{
+				// Display the username of the sender
 				SetConsoleTextAttribute(hConsole, clientColor);
-				std::cout << MesDonneesClient.name << " :\n";
+				std::cout << ClientData.m_username << " :\n";
 				SetConsoleTextAttribute(hConsole, classiqueColor);
 
-				//input du message
+				// Message input
 				memset(buffer, 0, BUFFER_SIZE);
 				FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
 				std::cin.ignore();
-				std::cin.getline(MesDonneesClient.message, 4096);
+				std::cin.getline(ClientData.m_message, 4096);
 				std::cout << "\n";
 
-				//envoie du message
-				err = send(sock, (char*)&MesDonneesClient, sizeof(MesDonneesClient), 0);
+				// Send the message
+				err = send(sock, (char*)&ClientData, sizeof(ClientData), 0);
 
-				//echange de parole ou pas
-				std::string chaine = MesDonneesClient.message;
-				if (chaine.find('%') == std::string::npos) {
+				// If '%' is in the message : flip the state
+				std::string chaine = ClientData.m_message;
+
+				if (chaine.find('%') == std::string::npos)
+				{
 					read = !read;
 				}
 			}
 		}
-		else //mode réception
+
+		// ################## Receiving state ################## //
+
+		else
 		{
-
-			SDonnee DonneeServeur;
-			//attente du type d'envoie 
-			while (DonneeServeur.TypeCom == NULL) {
-				recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
-
+			// New SData structure to store the server message
+			SData ServerData;
+			// Wait for the sending kind
+			while (ServerData.m_type == NULL)
+			{
+				recv(sock, (char*)&ServerData, sizeof(ServerData), 0);
 			}
 
-			//reception d'image
-			if (DonneeServeur.TypeCom == 'f') {
-				//reception du nom du fichier
+			// ==== File receiving ==== //
+
+			if (ServerData.m_type == 'f')
+			{
+				// Get file name
 				recv(sock, file_name, sizeof(file_name), 0);
 
 				FILE* fp = fopen(file_name, "wb");
 
-
+				// Initiate buffer and chunk index
 				memset(buffer, 0, BUFFER_SIZE);
 				int length = 1;
 				
-				//boucle de reception du fichier
+				// File reception loop
 				while (length >0)
 				{
 					length = recv(sock, buffer, BUFFER_SIZE, 0);
@@ -186,8 +214,10 @@ void main()
 					}
 					memset(buffer, 0, BUFFER_SIZE);
 
-					//vérifie si la taille de ce qui est reçu est égale a la taille max si c'est faux alors c'est le dernier buffer du fichier
-					if (length < BUFFER_SIZE) {
+					// Checks if the size of the reception is equal to the maximum size
+					// If false then it's the last buffer of the file
+					if (length < BUFFER_SIZE)
+					{
 						length = 0;
 						SetConsoleTextAttribute(hConsole, infoColor);
 						std::cout << "fichier : " << file_name << " recu \n";
@@ -197,57 +227,40 @@ void main()
 				}
 				fclose(fp);
 
-				/*char ServeurKeepTalking = NULL;
-
-				while (ServeurKeepTalking == NULL) {
-					recv(sock, (char*)ServeurKeepTalking, sizeof(ServeurKeepTalking), 0);
-				}*/
-
-				/*if (ServeurKeepTalking == 'n')
-				{
-					read = !read;
-				}
-				else 
-				{
-					SetConsoleTextAttribute(hConsole, infoColor);
-					std::cout << DonneeServeur.name << " garde la parole. \n";
-					SetConsoleTextAttribute(hConsole, classiqueColor);
-				}
-				char ClientKeepTalking = NULL;*/
-
+				// Switch the state
 				read = !read;
 			}
 
-			//reception de texte 
-			if (DonneeServeur.TypeCom == 't') {
+			// ==== File receiving ==== //
 
-				//condition pour ce mettre en attente de texte
-				if (DonneeServeur.message[0] == '\0') {
-					recv(sock, (char*)&DonneeServeur, sizeof(DonneeServeur), 0);
+			if (ServerData.m_type == 't')
+			{
+				// Receiving the message structure
+				if (ServerData.m_message[0] == '\0')
+				{
+					recv(sock, (char*)&ServerData, sizeof(ServerData), 0);
 				}
 
-				//affichage du nom du correspondant
+				// Display the username of the sender
 				SetConsoleTextAttribute(hConsole, serveurColor);
-				std::cout << DonneeServeur.name << " :";
+				std::cout << ServerData.m_username << " :";
 				SetConsoleTextAttribute(hConsole, classiqueColor);
 
-				//affichage du message envoyé par le correspondant
-				std::cout << DonneeServeur.message << "\n\n";
-				std::string chaineRecv = DonneeServeur.message;
+				// Display the message
+				std::cout << ServerData.m_message << "\n\n";
+				std::string chaineRecv = ServerData.m_message;
 
-				//cherche dans le buffer le caractère '%' afin de savoir si l'utilisateur veut garder la parole
-				if (chaineRecv.find('%') == std::string::npos) {
+				// Looking for the character '%' in the buffer in order to know if the client wants to keep speaking
+				if (chaineRecv.find('%') == std::string::npos)
+				{
 					read = !read;
 				}
-
 			}
 		}
 	}
-		closesocket(sock);
+	// End of the connection
+	closesocket(sock);
+	WSACleanup();
 
-		std::cout << "Connection termin�e\n\n";
-
-		WSACleanup();
-
-	
+	return 0;
 }
