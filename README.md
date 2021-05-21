@@ -10,9 +10,9 @@ _[EN]_
 
 This is a two person network chat application.
 
-The application is made in ultra low level C++, the graphics library used is WXwidgets C++ and the communication part is handled by sfml.
+The application is made in ultra low level C++, the graphics library used is WXwidgets C++ and the communication part is handled by winsock2.
 
-The network communication system uses a non-blocking socket and each user is able to send/retrieve data.
+The network communication system uses a blocking socket and each user is able to send/retrieve data.
 
 ## Compiling and debugging
 
@@ -32,9 +32,9 @@ _[FR]_
 
 Ceci est une application réseaux de chat à deux personnes.
 
-L'application est programmée en C++ ultra bas niveau, la bibliothèque graphique utilisé est WXwidgets C++ et la partie communication est assurée par sfml.
+L'application est programmée en C++ ultra bas niveau, la bibliothèque graphique utilisé est WXwidgets C++ et la partie communication est assurée par winsock2.
 
-Le système de communication réseaux utilise un socket non bloquant et chaque utilisateur est capable d’envoyer/récupérer des données.
+Le système de communication réseaux utilise un socket bloquant et chaque utilisateur est capable d’envoyer/récupérer des données.
 
 ## Compilation et debugging
 
